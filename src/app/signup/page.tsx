@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Info } from "lucide-react"
@@ -100,6 +100,7 @@ export default function SignUp() {
 
         {/* Info Message */}
         <Alert variant="info">
+          <AlertTitle className="text-body2">Hi Bessie Cooper</AlertTitle>
           <AlertDescription className="text-body2">
             Please fill in your details to create an account
           </AlertDescription>

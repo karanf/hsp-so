@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -41,16 +43,111 @@ import {
   Menu,
   User,
   Calendar as CalendarIcon,
-  Bell
+  Bell,
+  CheckCircle2,
+  XCircle,
+  Info,
+  AlertCircle
 } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Playground() {
+  const { toast } = useToast()
+
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto space-y-12">
         <h1 className="text-4xl font-bold text-center mb-12">
           Component Showcase
         </h1>
+
+        {/* Toast Notifications */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-bold">Toast Notifications</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Toast Messages</CardTitle>
+              <CardDescription>Various types of toast notifications</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-4">
+              <Button
+                onClick={() => {
+                  toast({
+                    title: "Success",
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-[#2E7D32]" />
+                        <span>Operation completed successfully.</span>
+                      </div>
+                    ),
+                    className: "bg-[#EDF7ED] border-[#2E7D32] text-[#1E4620]",
+                  })
+                }}
+              >
+                Show Success Toast
+              </Button>
+
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  toast({
+                    title: "Error",
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <XCircle className="h-4 w-4 text-[#D32F2F]" />
+                        <span>Something went wrong. Please try again.</span>
+                      </div>
+                    ),
+                    className: "bg-[#FDEDED] border-[#D32F2F] text-[#5F2120]",
+                  })
+                }}
+              >
+                Show Error Toast
+              </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  toast({
+                    title: "Information",
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <Info className="h-4 w-4 text-[#0288D1]" />
+                        <span>Here's some useful information for you.</span>
+                      </div>
+                    ),
+                    className: "bg-[#E5F6FD] border-[#0288D1] text-[#014361]",
+                  })
+                }}
+              >
+                Show Info Toast
+              </Button>
+
+              <Button
+                variant="tertiary"
+                onClick={() => {
+                  toast({
+                    title: "Action Required",
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-[#EF6C00]" />
+                        <span>Please take action on your account.</span>
+                      </div>
+                    ),
+                    className: "bg-[#FFF4E5] border-[#EF6C00] text-[#663C00]",
+                    action: (
+                      <Button variant="secondary" size="sm" className="mt-2 w-full">
+                        Take Action
+                      </Button>
+                    ),
+                  })
+                }}
+              >
+                Show Action Toast
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Basic Inputs */}
         <section className="space-y-6">

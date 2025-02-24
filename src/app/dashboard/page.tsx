@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronDown, Home, User, Settings, LogOut, SquareCheck, FileCheck, X } from "lucide-react"
+import { ChevronDown, Home, User, Settings, LogOut, SquareCheck, FileCheck, X, CheckCircle2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -21,13 +21,28 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Card } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Progress } from "@/components/ui/progress"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Dashboard() {
   const router = useRouter()
+  const { toast } = useToast()
   const [showWelcomeAlert, setShowWelcomeAlert] = useState(true)
+
+  useEffect(() => {
+    toast({
+      title: "Success",
+      description: (
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-[#2E7D32]" />
+          <span>Your account was created</span>
+        </div>
+      ),
+      className: "bg-[#EDF7ED] border-[#2E7D32] text-[#1E4620]",
+    })
+  }, [])
 
   const handleLogout = () => {
     // In a real app, we would clear auth tokens/session here
