@@ -256,7 +256,7 @@ export default function Playground() {
                   <Badge>Default</Badge>
                   <Badge variant="secondary">Secondary</Badge>
                   <Badge variant="destructive">Destructive</Badge>
-                  <Badge variant="outline">Outline</Badge>
+                  <Badge variant="secondary">Outline</Badge>
                 </div>
                 <Progress value={60} className="w-full" />
                 <div className="space-y-3">
