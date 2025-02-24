@@ -38,7 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Accordion,
   AccordionContent,
@@ -46,11 +46,26 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function PaymentCompleteDashboard() {
   const router = useRouter()
+  const { toast } = useToast()
   const [showWelcomeAlert, setShowWelcomeAlert] = useState(true)
   const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+
+  useEffect(() => {
+    // Show success toast immediately on mount
+    const showSuccessToast = () => {
+      toast({
+        title: "Success",
+        description: "Your payment was successfully processed. You will receive a confirmation of payment shortly in your email",
+        className: "bg-[#EDF7ED] border-[#2E7D32] text-[#1E4620]",
+      })
+    }
+    
+    showSuccessToast()
+  }, [toast]) // Add toast as a dependency
 
   const handleLogout = () => {
     // In a real app, we would clear auth tokens/session here
@@ -206,15 +221,125 @@ export default function PaymentCompleteDashboard() {
         <div className="p-6 mt-[98px]">
           {showWelcomeAlert && (
             <Alert variant="info" className="mb-8 shadow-[0px_2px_4px_rgba(16,24,40,0.06),0px_4px_8px_rgba(16,24,40,0.1)] relative">
-              {/* ... existing welcome alert code ... */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4 h-6 w-6 text-[#0288D1] hover:text-[#0288D1] hover:bg-[#E5F6FD]"
+                onClick={() => setShowWelcomeAlert(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <AlertTitle>Welcome to Your Payment Dashboard</AlertTitle>
+              <AlertDescription className="text-body2">
+                Your initial deposit has been processed successfully. Below you'll find important documents and your payment schedule.
+              </AlertDescription>
             </Alert>
           )}
 
-          {/* Next Steps Card - Payment Schedule */}
+          {/* Next Steps Card */}
           <Card className="p-4 mb-6">
             <div className="flex flex-col gap-3">
               <h2 className="text-h4 text-[#141414] flex items-center gap-2">
                 <SquareCheck className="h-6 w-6" />
+                Next Steps
+              </h2>
+              <Alert variant="info">
+                <AlertDescription className="text-body2">
+                  Here are your next steps to complete your enrollment process.
+                </AlertDescription>
+              </Alert>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
+                  <div className="flex items-center gap-3">
+                    <FileCheck className="h-6 w-6 text-[#667085]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Review Course Details</h3>
+                      <span className="text-sm text-[#667085]">Verify your course and accommodation information</span>
+                    </div>
+                  </div>
+                  <Button variant="default" size="sm">
+                    Review Now
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="h-6 w-6 text-[#667085]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Set Up Payment Method</h3>
+                      <span className="text-sm text-[#667085]">Add a payment method for future installments</span>
+                    </div>
+                  </div>
+                  <Button variant="default" size="sm">
+                    Set Up
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Documents Card */}
+          <Card className="p-4 mb-6">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-h4 text-[#141414] flex items-center gap-2">
+                <FileCheck className="h-6 w-6" />
+                Documents
+              </h2>
+              <Alert variant="info">
+                <AlertDescription className="text-body2">
+                  Important documents related to your course reservation and payments. Click to download.
+                </AlertDescription>
+              </Alert>
+              <div className="flex flex-col gap-4">
+                {/* Payment Receipt */}
+                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="h-6 w-6 text-[#667085]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Payment Receipt</h3>
+                      <span className="text-sm text-[#667085]">Initial deposit payment confirmation</span>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
+                    Download PDF
+                  </Button>
+                </div>
+
+                {/* Course Reservation Document */}
+                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
+                  <div className="flex items-center gap-3">
+                    <FileCheck className="h-6 w-6 text-[#667085]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Course Reservation Details</h3>
+                      <span className="text-sm text-[#667085]">Complete course and accommodation information</span>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
+                    Download PDF
+                  </Button>
+                </div>
+
+                {/* Payment Schedule Document */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <ListChecks className="h-6 w-6 text-[#667085]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Payment Schedule</h3>
+                      <span className="text-sm text-[#667085]">Detailed payment timeline and instructions</span>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
+                    Download PDF
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Payment Schedule Card */}
+          <Card className="p-4 mb-6">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-h4 text-[#141414] flex items-center gap-2">
+                <Euro className="h-6 w-6" />
                 Payment Schedule
               </h2>
               <Alert variant="info">
@@ -244,50 +369,47 @@ export default function PaymentCompleteDashboard() {
             </div>
           </Card>
 
-          {/* Completed Card */}
+          {/* Completed Tasks Card */}
           <Card className="p-4">
             <div className="flex flex-col gap-3">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="completed" className="border-none">
-                  <AccordionTrigger className="hover:no-underline p-0">
-                    <h2 className="text-h4 text-[#141414] flex items-center gap-2">
-                      <ListChecks className="h-6 w-6" />
-                      Completed Tasks
-                    </h2>
-                  </AccordionTrigger>
-                  <AccordionContent className="pt-3">
-                    <div className="flex flex-col gap-6">
-                      {/* Completed Deposit Payment */}
-                      <div className="flex items-start justify-between border-b border-[#E8E8E8] pb-4">
-                        <div className="flex items-center gap-3">
-                          <CircleCheck className="h-6 w-6" />
-                          <div className="flex flex-col">
-                            <h3 className="text-h5 text-[#141414]">Initial Deposit</h3>
-                            <span className="text-sm text-[#667085]">Paid on {new Date().toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                        <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
-                          View Receipt
-                        </Button>
-                      </div>
-
-                      {/* Completed Course Reservation */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <CircleCheck className="h-6 w-6" />
-                          <div className="flex flex-col">
-                            <h3 className="text-h5 text-[#141414]">Course Reservation</h3>
-                            <span className="text-sm text-[#667085]">Completed on {new Date().toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                        <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
-                          View Details
-                        </Button>
-                      </div>
+              <h2 className="text-h4 text-[#141414] flex items-center gap-2">
+                <ListChecks className="h-6 w-6" />
+                Completed Tasks
+              </h2>
+              <Alert variant="info">
+                <AlertDescription className="text-body2">
+                  Tasks you have completed in your enrollment process.
+                </AlertDescription>
+              </Alert>
+              <div className="flex flex-col gap-6">
+                {/* Completed Deposit Payment */}
+                <div className="flex items-start justify-between border-b border-[#E8E8E8] pb-4">
+                  <div className="flex items-center gap-3">
+                    <CircleCheck className="h-6 w-6 text-[#2E7D32]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Initial Deposit</h3>
+                      <span className="text-sm text-[#667085]">Paid on {new Date().toLocaleDateString()}</span>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                  </div>
+                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
+                    View Receipt
+                  </Button>
+                </div>
+
+                {/* Completed Course Reservation */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <CircleCheck className="h-6 w-6 text-[#2E7D32]" />
+                    <div className="flex flex-col">
+                      <h3 className="text-h5 text-[#141414]">Course Reservation</h3>
+                      <span className="text-sm text-[#667085]">Completed on {new Date().toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
+                    View Details
+                  </Button>
+                </div>
+              </div>
             </div>
           </Card>
         </div>

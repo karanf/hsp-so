@@ -46,21 +46,31 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function CompletedDashboard() {
   const router = useRouter()
+  const { toast } = useToast()
   const [showWelcomeAlert, setShowWelcomeAlert] = useState(true)
   const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const handleLogout = () => {
     // In a real app, we would clear auth tokens/session here
     router.push("/")
   }
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle payment processing here
+    setIsProcessing(true)
+
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    setIsProcessing(false)
     setIsPaymentOpen(false)
+    
+    router.push("/dashboard/payment-complete")
   }
 
   return (
@@ -257,6 +267,7 @@ export default function CompletedDashboard() {
                               placeholder="1234 5678 9012 3456"
                               required
                               className="pl-10"
+                              defaultValue="4242 4242 4242 4242"
                             />
                             <CreditCard className="absolute left-2 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                           </div>
@@ -268,6 +279,7 @@ export default function CompletedDashboard() {
                               id="expiry"
                               placeholder="MM/YY"
                               required
+                              defaultValue="12/25"
                             />
                           </div>
                           <div className="grid gap-2">
@@ -276,6 +288,7 @@ export default function CompletedDashboard() {
                               id="cvc"
                               placeholder="123"
                               required
+                              defaultValue="123"
                             />
                           </div>
                         </div>
@@ -285,10 +298,15 @@ export default function CompletedDashboard() {
                             id="name"
                             placeholder="John Smith"
                             required
+                            defaultValue="Bessie Cooper"
                           />
                         </div>
-                        <Button type="submit" className="w-full mt-4">
-                          Pay €400.00
+                        <Button 
+                          type="submit" 
+                          className="w-full mt-4" 
+                          disabled={isProcessing}
+                        >
+                          {isProcessing ? "Processing..." : "Pay €400.00"}
                         </Button>
                       </form>
                     </DialogContent>
