@@ -1,0 +1,70 @@
+:root {
+  /* Base Primary Colors */
+  --base-primary-main-lightmode: var(--educatius-teal-600);
+  --base-primary-main-darkmode: var(--educatius-teal-50);
+  --base-primary-dark-lightmode: var(--educatius-teal-700);
+  --base-primary-dark-darkmode: var(--educatius-teal-25);
+  --base-primary-light-lightmode: var(--educatius-teal-500);
+  --base-primary-light-darkmode: var(--educatius-teal-100);
+  --base-primary-contrast-lightmode: #ffffff;
+  --base-primary-contrast-darkmode: var(--educatius-teal-950);
+
+  /* Border Colors */
+  --borders-primary-border-brand-lightmode: var(--educatius-teal-300);
+  --borders-primary-border-brand-darkmode: var(--educatius-teal-400);
+  --borders-primary-border-solid-lightmode: var(--educatius-teal-600);
+  --borders-primary-border-solid-darkmode: var(--educatius-teal-500);
+  --borders-primary-border-solid-alt-lightmode: var(--educatius-teal-700);
+  --borders-primary-border-solid-alt-darkmode: var(--educatius-teal-600);
+  --borders-secondary-border-brand-lightmode: var(--educatius-teal-300);
+  --borders-secondary-border-solid-lightmode: var(--educatius-teal-500);
+  --borders-secondary-border-alt-lightmode: var(--educatius-teal-500);
+  --borders-secondary-border-brand-darkmode: #ffffff;
+  --borders-secondary-border-solid-darkmode: #ffffff;
+  --borders-secondary-border-alt-darkmode: #ffffff;
+
+  /* Button Styles */
+  --components-buttons-backgrounds-primary-button-bg-light: var(--educatius-teal-600);
+  --components-buttons-backgrounds-primary-button-bg-dark: var(--educatius-teal-200);
+  --components-buttons-backgrounds-primary-button-hover-bg-light: var(--educatius-teal-800);
+  --components-buttons-backgrounds-primary-button-hover-bg-dark: var(--educatius-teal-50);
+  --components-buttons-backgrounds-primary-button-focus-bg-light: var(--educatius-teal-600);
+  --components-buttons-backgrounds-primary-button-focus-bg-dark: var(--educatius-teal-200);
+
+  /* Grey Scale */
+  --base-grey-25: #fcfcfc;
+  --base-grey-50: #f9f9f9;
+  --base-grey-100: #e8e8e8;
+  --base-grey-200: #dfdfdf;
+  --base-grey-300: #cdcdcd;
+  --base-grey-400: #b3b3b3;
+  --base-grey-500: #767676;
+  --base-grey-600: #626262;
+  --base-grey-700: #4e4e4e;
+  --base-grey-800: #3b3b3b;
+  --base-grey-900: #272727;
+  --base-grey-950: #141414;
+
+  /* Focus Rings */
+  --focus-rings-focus-shadow-color-primary-lightmode: rgba(0 150 143 / 0.24);
+  --focus-rings-focus-shadow-secondary-lightmode: rgba(137 137 137 / 0.14);
+  --focus-rings-focus-shadow-color-primary-darkmode: rgba(0 150 143 / 0.48);
+  --focus-rings-focus-shadow-secondary-darkmode: rgba(157 157 157 / 0.48);
+  --focus-rings-focus-shadow-2nd-secondary-lightmode: rgba(39 39 39 / 0.05);
+  --focus-rings-focus-shadow-2nd-color-primary-lightmode: rgba(39 39 39 / 0.05);
+
+  /* Navigation */
+  --components-main-navigation-nav-link-default: var(--base-grey-25);
+  --components-main-navigation-nav-link-hover: var(--base-grey-25);
+  --components-main-navigation-nav-link-active: var(--base-grey-25);
+  --components-main-navigation-nav-link-bg-default: var(--base-transparent);
+  --components-main-navigation-nav-link-bg-hover: var(--educatius-burgundy-700);
+  --components-main-navigation-nav-link-bg-active: var(--base-transparent);
+  --components-main-navigation-indicator-default: var(--base-transparent);
+  --components-main-navigation-indicator-hover: var(--educatius-orange-300);
+  --components-main-navigation-indicator-active: var(--educatius-orange-500);
+  --components-main-navigation-icon-defaultbg: var(--base-transparent);
+  --components-main-navigation-icon-hoverbg: var(--educatius-burgundy-700);
+  --components-main-navigation-icon-activebg: var(--educatius-orange-600);
+  --components-main-navigation-nav-bg-default: var(--educatius-teal-600);
+} 

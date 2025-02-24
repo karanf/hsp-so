@@ -1,0 +1,70 @@
+:root {
+  /* Base Primary Colors */
+  --base-primary-main-lightmode: var(--greenheart-aloe-700);
+  --base-primary-main-darkmode: var(--greenheart-aloe-50);
+  --base-primary-dark-lightmode: var(--greenheart-aloe-800);
+  --base-primary-dark-darkmode: var(--greenheart-aloe-25);
+  --base-primary-light-lightmode: var(--greenheart-aloe-600);
+  --base-primary-light-darkmode: var(--greenheart-aloe-100);
+  --base-primary-contrast-lightmode: #ffffff;
+  --base-primary-contrast-darkmode: var(--greenheart-aloe-950);
+
+  /* Border Colors */
+  --borders-primary-border-brand-lightmode: var(--greenheart-aloe-300);
+  --borders-primary-border-brand-darkmode: var(--greenheart-aloe-400);
+  --borders-primary-border-solid-lightmode: var(--greenheart-aloe-600);
+  --borders-primary-border-solid-darkmode: var(--greenheart-aloe-500);
+  --borders-primary-border-solid-alt-lightmode: var(--greenheart-aloe-700);
+  --borders-primary-border-solid-alt-darkmode: var(--greenheart-aloe-600);
+  --borders-secondary-border-brand-lightmode: var(--greenheart-aloe-300);
+  --borders-secondary-border-solid-lightmode: var(--greenheart-aloe-500);
+  --borders-secondary-border-alt-lightmode: var(--greenheart-aloe-500);
+  --borders-secondary-border-brand-darkmode: #ffffff;
+  --borders-secondary-border-solid-darkmode: #ffffff;
+  --borders-secondary-border-alt-darkmode: #ffffff;
+
+  /* Button Styles */
+  --components-buttons-backgrounds-primary-button-bg-light: var(--greenheart-aloe-700);
+  --components-buttons-backgrounds-primary-button-bg-dark: var(--greenheart-aloe-200);
+  --components-buttons-backgrounds-primary-button-hover-bg-light: var(--greenheart-aloe-900);
+  --components-buttons-backgrounds-primary-button-hover-bg-dark: var(--greenheart-aloe-50);
+  --components-buttons-backgrounds-primary-button-focus-bg-light: var(--greenheart-aloe-700);
+  --components-buttons-backgrounds-primary-button-focus-bg-dark: var(--greenheart-aloe-200);
+
+  /* Grey Scale */
+  --base-grey-25: var(--greenheart-mountain-25);
+  --base-grey-50: var(--greenheart-mountain-50);
+  --base-grey-100: var(--greenheart-mountain-100);
+  --base-grey-200: var(--greenheart-mountain-200);
+  --base-grey-300: var(--greenheart-mountain-300);
+  --base-grey-400: var(--greenheart-mountain-400);
+  --base-grey-500: var(--greenheart-mountain-500);
+  --base-grey-600: var(--greenheart-mountain-600);
+  --base-grey-700: var(--greenheart-mountain-700);
+  --base-grey-800: var(--greenheart-mountain-800);
+  --base-grey-900: var(--greenheart-mountain-900);
+  --base-grey-950: var(--greenheart-mountain-950);
+
+  /* Focus Rings */
+  --focus-rings-focus-shadow-color-primary-lightmode: rgba(138 197 63 / 0.24);
+  --focus-rings-focus-shadow-secondary-lightmode: rgba(163 163 163 / 0.14);
+  --focus-rings-focus-shadow-color-primary-darkmode: rgba(138 197 63 / 0.48);
+  --focus-rings-focus-shadow-secondary-darkmode: rgba(224 224 224 / 0.48);
+  --focus-rings-focus-shadow-2nd-secondary-lightmode: rgba(20 20 20 / 0.05);
+  --focus-rings-focus-shadow-2nd-color-primary-lightmode: rgba(20 20 20 / 0.05);
+
+  /* Navigation */
+  --components-main-navigation-nav-link-default: var(--greenheart-aloe-700);
+  --components-main-navigation-nav-link-hover: var(--greenheart-aloe-900);
+  --components-main-navigation-nav-link-active: var(--greenheart-aloe-700);
+  --components-main-navigation-nav-link-bg-default: var(--base-transparent);
+  --components-main-navigation-nav-link-bg-hover: var(--base-grey-50);
+  --components-main-navigation-nav-link-bg-active: var(--base-transparent);
+  --components-main-navigation-indicator-default: var(--base-transparent);
+  --components-main-navigation-indicator-hover: var(--greenheart-aloe-200);
+  --components-main-navigation-indicator-active: var(--greenheart-aloe-500);
+  --components-main-navigation-icon-defaultbg: var(--base-transparent);
+  --components-main-navigation-icon-hoverbg: var(--base-grey-50);
+  --components-main-navigation-icon-activebg: var(--greenheart-aloe-600);
+  --components-main-navigation-nav-bg-default: var(--base-primary-contrast-lightmode);
+} 
