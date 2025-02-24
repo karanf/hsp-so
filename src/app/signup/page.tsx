@@ -74,7 +74,7 @@ export default function SignUp() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // In a real app, we would validate and send credentials to backend
-    router.push("/dashboard")
+    router.push("/dashboard?fromSignup=true")
   }
 
   return (
