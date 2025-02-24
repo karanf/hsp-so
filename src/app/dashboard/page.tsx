@@ -21,12 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Card } from "@/components/ui/card"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { Progress } from "@/components/ui/progress"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 
-export default function Dashboard() {
+function DashboardContent() {
   const router = useRouter()
   const { toast } = useToast()
   const [showWelcomeAlert, setShowWelcomeAlert] = useState(true)
@@ -233,5 +233,13 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense>
+      <DashboardContent />
+    </Suspense>
   )
 } 
