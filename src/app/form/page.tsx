@@ -39,6 +39,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 type State = {
   value: string;
@@ -1056,20 +1057,13 @@ export default function Form() {
               {/* Welcome Message */}
               <div className="flex-1 px-8 flex items-center justify-between">
                 <div className="flex flex-col">
-                <span className="text-[#141414] font-sans text-[1.5rem] font-normal leading-[133.4%] [font-feature-settings:'liga'_off,'clig'_off]">
-                    Course Reservation
-                  </span>
-                  <span className="text-[#667085] font-sans text-base font-normal leading-[150%] [font-feature-settings:'liga'_off,'clig'_off]">
-                    {activeSection === 'student-details' && "Student Details"}
-                    {activeSection === 'parent1-details' && "Parent/Guardian 1 Details"}
-                    {activeSection === 'parent2-details' && "Parent/Guardian 2 Details"}
-                    {activeSection === 'additional-info' && "Additional Information"}
-                  </span>
-                  
+                <h1 className="text-[#141414] font-sans text-[1.5rem] font-normal leading-[133.4%] [font-feature-settings:'liga'_off,'clig'_off]">
+                  Hi Bessie
+                </h1>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                     <Button
                       variant="secondary"
                       size="icon"
@@ -1180,7 +1174,7 @@ export default function Form() {
                       {isFormComplete ? (
                         "Submit"
                       ) : (
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                           <span>Progress: {formProgress}%</span>
                           <div className="relative h-6 w-6">
                             <svg className="h-6 w-6 -rotate-90 transform">
@@ -1204,36 +1198,14 @@ export default function Form() {
                                 className="transition-all duration-300 ease-out"
                               />
                             </svg>
-                          </div>
+                      </div>
                         </div>
                       )}
                     </Button>
+                    <div className="border-l border-[#DFDFDF] pl-4">
+                      <LanguageSwitcher />
+                    </div>
                   </div>
-                <Select defaultValue="en">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/en.svg" width={20} height={20} alt="English" />
-                        English
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="es">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/es.svg" width={20} height={20} alt="Spanish" />
-                        Spanish
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="fr">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/fr.svg" width={20} height={20} alt="French" />
-                        French
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
                 </div>
               </div>
 

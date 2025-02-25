@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/accordion"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 export default function PaymentCompleteDashboard() {
   const router = useRouter()
@@ -144,31 +145,7 @@ export default function PaymentCompleteDashboard() {
                 <h1 className="text-[#141414] font-sans text-[1.5rem] font-normal leading-[133.4%] [font-feature-settings:'liga'_off,'clig'_off]">
                   Hi Bessie
                 </h1>
-                <Select defaultValue="en">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/en.svg" width={20} height={20} alt="English" />
-                        English
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="es">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/es.svg" width={20} height={20} alt="Spanish" />
-                        Spanish
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="fr">
-                      <div className="flex items-center gap-2">
-                        <Image src="/flags/fr.svg" width={20} height={20} alt="French" />
-                        French
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <LanguageSwitcher />
               </div>
 
               {/* User Area - Fixed 320px width */}

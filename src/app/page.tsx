@@ -47,12 +47,14 @@ import {
   Info
 } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 export default function SignIn() {
   const router = useRouter()
   const [emailError, setEmailError] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,6 +112,8 @@ export default function SignIn() {
               placeholder="Email Address"
               label="Email Address"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               onBlur={handleEmailBlur}
               error={!!emailError}
               helperText={emailError}
@@ -119,6 +123,8 @@ export default function SignIn() {
               placeholder="Password"
               label="Password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" />
