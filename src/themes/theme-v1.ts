@@ -80,7 +80,7 @@ export const helperTextStyles = {
 
 export const dropdownMenuStyles = {
   content: {
-    base: "z-50 min-w-[8rem] overflow-hidden rounded-md border border-[#E8E8E8] bg-gradient-to-r from-white/10 via-white/30 to-white/10 backdrop-blur-[10px] p-1 text-popover-foreground shadow-elevation-3",
+    base: "z-50 min-w-[8rem] overflow-hidden rounded-md border border-[#E8E8E8] bg-gradient-to-r from-white/10 via-white/30 to-white/10 backdrop-blur-[10px] p-1 text-popover-foreground shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]",
     animation: "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
   },
   item: {
