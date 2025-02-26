@@ -1,7 +1,7 @@
 "use client"
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { getFlag } from "flagpack"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
 
 interface LanguageSwitcherProps {
   defaultValue?: string;
@@ -10,30 +10,35 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ defaultValue = "en", onValueChange }: LanguageSwitcherProps) {
   return (
-    <ToggleGroup 
-      type="single" 
-      defaultValue={defaultValue}
-      onValueChange={onValueChange}
-      className="border border-[#DFDFDF] rounded-md"
-    >
-      <ToggleGroupItem 
-        value="en" 
-        className="px-3 py-2 data-[state=on]:bg-[#E8F4F4] data-[state=on]:text-[#005151] hover:bg-[#E8F4F4] hover:text-[#005151]"
-      >
-        <div className="flex items-center gap-2">
-          <img src={getFlag("gb")} width={20} height={20} alt="English" />
-          <span className="text-sm font-medium">EN</span>
-        </div>
-      </ToggleGroupItem>
-      <ToggleGroupItem 
-        value="es" 
-        className="px-3 py-2 data-[state=on]:bg-[#E8F4F4] data-[state=on]:text-[#005151] hover:bg-[#E8F4F4] hover:text-[#005151]"
-      >
-        <div className="flex items-center gap-2">
-          <img src={getFlag("es")} width={20} height={20} alt="Spanish" />
-          <span className="text-sm font-medium">ES</span>
-        </div>
-      </ToggleGroupItem>
-    </ToggleGroup>
+    <Tabs defaultValue={defaultValue} onValueChange={onValueChange} className="bg-transparent">
+      <TabsList className="bg-transparent">
+        <TabsTrigger value="en">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 relative">
+              <Image
+                src="/flags/GB.svg"
+                alt="English"
+                fill
+                className="object-cover rounded-sm"
+              />
+            </div>
+            <span>EN</span>
+          </div>
+        </TabsTrigger>
+        <TabsTrigger value="es">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 relative">
+              <Image
+                src="/flags/ES.svg"
+                alt="Spanish"
+                fill
+                className="object-cover rounded-sm"
+              />
+            </div>
+            <span>ES</span>
+          </div>
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   )
 } 

@@ -53,26 +53,26 @@ type Country = {
 }
 
 const countries: Country[] = [
-  { value: "us", label: "United States", flag: "🇺🇸" },
-  { value: "ca", label: "Canada", flag: "🇨🇦" },
-  { value: "gb", label: "United Kingdom", flag: "🇬🇧" },
-  { value: "fr", label: "France", flag: "🇫🇷" },
-  { value: "de", label: "Germany", flag: "🇩🇪" },
-  { value: "it", label: "Italy", flag: "🇮🇹" },
-  { value: "es", label: "Spain", flag: "🇪🇸" },
-  { value: "au", label: "Australia", flag: "🇦🇺" },
-  { value: "nz", label: "New Zealand", flag: "🇳🇿" },
-  { value: "jp", label: "Japan", flag: "🇯🇵" },
-  { value: "kr", label: "South Korea", flag: "🇰🇷" },
-  { value: "in", label: "India", flag: "🇮🇳" },
-  { value: "br", label: "Brazil", flag: "🇧🇷" },
-  { value: "mx", label: "Mexico", flag: "🇲🇽" },
-  { value: "za", label: "South Africa", flag: "🇿🇦" },
-  { value: "cn", label: "China", flag: "🇨🇳" },
-  { value: "ru", label: "Russia", flag: "🇷🇺" },
-  { value: "sg", label: "Singapore", flag: "🇸🇬" },
-  { value: "ae", label: "United Arab Emirates", flag: "🇦🇪" },
-  { value: "se", label: "Sweden", flag: "🇸🇪" },
+  { value: "us", label: "United States", flag: "/flags/US.svg" },
+  { value: "ca", label: "Canada", flag: "/flags/CA.svg" },
+  { value: "gb", label: "United Kingdom", flag: "/flags/GB.svg" },
+  { value: "fr", label: "France", flag: "/flags/FR.svg" },
+  { value: "de", label: "Germany", flag: "/flags/DE.svg" },
+  { value: "it", label: "Italy", flag: "/flags/IT.svg" },
+  { value: "es", label: "Spain", flag: "/flags/ES.svg" },
+  { value: "au", label: "Australia", flag: "/flags/AU.svg" },
+  { value: "nz", label: "New Zealand", flag: "/flags/NZ.svg" },
+  { value: "jp", label: "Japan", flag: "/flags/JP.svg" },
+  { value: "kr", label: "South Korea", flag: "/flags/KR.svg" },
+  { value: "in", label: "India", flag: "/flags/IN.svg" },
+  { value: "br", label: "Brazil", flag: "/flags/BR.svg" },
+  { value: "mx", label: "Mexico", flag: "/flags/MX.svg" },
+  { value: "za", label: "South Africa", flag: "/flags/ZA.svg" },
+  { value: "cn", label: "China", flag: "/flags/CN.svg" },
+  { value: "ru", label: "Russia", flag: "/flags/RU.svg" },
+  { value: "sg", label: "Singapore", flag: "/flags/SG.svg" },
+  { value: "ae", label: "United Arab Emirates", flag: "/flags/AE.svg" },
+  { value: "se", label: "Sweden", flag: "/flags/SE.svg" }
 ]
 
 const statesByCountry: Record<string, State[]> = {
@@ -1320,7 +1320,17 @@ export default function Form() {
                       <SelectContent>
                         {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                           <SelectItem key={country.value} value={country.value}>
-                            {country.flag} {country.label}
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-5 h-5">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.label} flag`}
+                                  fill
+                                  className="object-cover rounded-sm"
+                                />
+                              </div>
+                              +{getCountryCallingCode(country.value)} {country.label}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -1372,18 +1382,48 @@ export default function Form() {
                   <div className="w-[120px]">
                     <Select value={studentPhoneCountry} onValueChange={setStudentPhoneCountry}>
                       <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('student-details')}>
-                        <SelectValue placeholder={<>🌍 +1</>}>
+                        <SelectValue placeholder={<>
+                          <div className="flex items-center gap-2">
+                            <div className="relative w-5 h-5">
+                              <Image 
+                                src="/flags/US.svg"
+                                alt="United States flag"
+                                fill
+                                className="object-cover rounded-sm"
+                              />
+                            </div>
+                            +1
+                          </div>
+                        </>}>
                           {studentPhoneCountry && (
-                            <>
-                              {countries.find(c => c.value === studentPhoneCountry)?.flag} +{getCountryCallingCode(studentPhoneCountry)}
-                            </>
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-5 h-5">
+                                <Image
+                                  src={countries.find(c => c.value === studentPhoneCountry)?.flag || "/flags/US.svg"}
+                                  alt={`${countries.find(c => c.value === studentPhoneCountry)?.label || "United States"} flag`}
+                                  fill
+                                  className="object-cover rounded-sm"
+                                />
+                              </div>
+                              +{getCountryCallingCode(studentPhoneCountry)}
+                            </div>
                           )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                           <SelectItem key={country.value} value={country.value}>
-                            {country.flag} +{getCountryCallingCode(country.value)} {country.label}
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-5 h-5">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.label} flag`}
+                                  fill
+                                  className="object-cover rounded-sm"
+                                />
+                              </div>
+                              +{getCountryCallingCode(country.value)} {country.label}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -1485,7 +1525,17 @@ export default function Form() {
                           <SelectContent>
                             {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                               <SelectItem key={country.value} value={country.value}>
-                                {country.flag} {country.label}
+                          <div className="flex items-center gap-2">
+                                  <div className="relative w-5 h-5">
+                                    <Image
+                                      src={country.flag}
+                                      alt={`${country.label} flag`}
+                                      fill
+                                      className="object-cover rounded-sm"
+                                    />
+                                  </div>
+                                  +{getCountryCallingCode(country.value)} {country.label}
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -1539,18 +1589,48 @@ export default function Form() {
                   <div className="w-[120px]">
                     <Select value={parent1PhoneCountry} onValueChange={setParent1PhoneCountry}>
                       <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('parent1-details')}>
-                        <SelectValue placeholder={<>🌍 +1</>}>
+                        <SelectValue placeholder={<>
+                          <div className="flex items-center gap-2">
+                            <div className="relative w-5 h-5">
+                              <Image 
+                                src="/flags/US.svg"
+                                alt="United States flag"
+                                fill
+                                className="object-cover rounded-sm"
+                              />
+                            </div>
+                            +1
+                          </div>
+                        </>}>
                           {parent1PhoneCountry && (
-                            <>
-                              {countries.find(c => c.value === parent1PhoneCountry)?.flag} +{getCountryCallingCode(parent1PhoneCountry)}
-                            </>
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-5 h-5">
+                                <Image
+                                  src={countries.find(c => c.value === parent1PhoneCountry)?.flag || "/flags/US.svg"}
+                                  alt={`${countries.find(c => c.value === parent1PhoneCountry)?.label || "United States"} flag`}
+                                  fill
+                                  className="object-cover rounded-sm"
+                                />
+                              </div>
+                              +{getCountryCallingCode(parent1PhoneCountry)}
+                            </div>
                           )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                           <SelectItem key={country.value} value={country.value}>
-                            {country.flag} +{getCountryCallingCode(country.value)} {country.label}
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-5 h-5">
+                                <Image
+                                  src={country.flag}
+                                  alt={`${country.label} flag`}
+                                  fill
+                                  className="object-cover rounded-sm"
+                                />
+                              </div>
+                              +{getCountryCallingCode(country.value)} {country.label}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -1756,7 +1836,17 @@ export default function Form() {
                               <SelectContent>
                                 {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                                   <SelectItem key={country.value} value={country.value}>
-                                    {country.flag} {country.label}
+                                    <div className="flex items-center gap-2">
+                                      <div className="relative w-5 h-5">
+                                        <Image
+                                          src={country.flag}
+                                          alt={`${country.label} flag`}
+                                          fill
+                                          className="object-cover rounded-sm"
+                                        />
+                                      </div>
+                                      +{getCountryCallingCode(country.value)} {country.label}
+                                    </div>
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -1798,8 +1888,8 @@ export default function Form() {
                           </div>
                         </div>
                       </>
-                    )}
-                  </div>
+                            )}
+                          </div>
 
                   {/* Parent2 Phone */}
                   <div>
@@ -1815,18 +1905,48 @@ export default function Form() {
                           disabled={isSoleGuardian === "yes"}
                         >
                           <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('parent2-details')}>
-                            <SelectValue placeholder={<>🌍 +1</>}>
+                            <SelectValue placeholder={<>
+                              <div className="flex items-center gap-2">
+                                <div className="relative w-5 h-5">
+                                  <Image 
+                                    src="/flags/US.svg"
+                                    alt="United States flag"
+                                    fill
+                                    className="object-cover rounded-sm"
+                                  />
+                                </div>
+                                +1
+                              </div>
+                            </>}>
                               {parent2PhoneCountry && (
-                                <>
-                                  {countries.find(c => c.value === parent2PhoneCountry)?.flag} +{getCountryCallingCode(parent2PhoneCountry)}
-                                </>
+                                <div className="flex items-center gap-2">
+                                  <div className="relative w-5 h-5">
+                                    <Image
+                                      src={countries.find(c => c.value === parent2PhoneCountry)?.flag || "/flags/US.svg"}
+                                      alt={`${countries.find(c => c.value === parent2PhoneCountry)?.label || "United States"} flag`}
+                                      fill
+                                      className="object-cover rounded-sm"
+                                    />
+                                  </div>
+                                  +{getCountryCallingCode(parent2PhoneCountry)}
+                                </div>
                               )}
                             </SelectValue>
                           </SelectTrigger>
                           <SelectContent>
                             {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
                               <SelectItem key={country.value} value={country.value}>
-                                {country.flag} +{getCountryCallingCode(country.value)} {country.label}
+                                <div className="flex items-center gap-2">
+                                  <div className="relative w-5 h-5">
+                                    <Image
+                                      src={country.flag}
+                                      alt={`${country.label} flag`}
+                                      fill
+                                      className="object-cover rounded-sm"
+                                    />
+                                  </div>
+                                  +{getCountryCallingCode(country.value)} {country.label}
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
