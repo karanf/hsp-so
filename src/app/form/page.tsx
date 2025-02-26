@@ -1177,6 +1177,11 @@ export default function Form() {
                       variant="default"
                       className={`h-10 px-4 ${isFormComplete ? 'bg-[#007F7A] text-white hover:bg-[#005151]' : ''}`}
                       disabled={!isFormComplete}
+                      onClick={() => {
+                        if (isFormComplete) {
+                          router.push('/dashboard/completed');
+                        }
+                      }}
                     >
                       {isFormComplete ? (
                         "Submit"
