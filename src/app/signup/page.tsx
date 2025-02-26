@@ -8,6 +8,7 @@ import { Info } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 export default function SignUp() {
   const router = useRouter()
@@ -78,7 +79,10 @@ export default function SignUp() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-white">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-white relative">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <div className="w-full max-w-[400px] space-y-8">
         {/* Logo */}
         <div className="flex justify-center">

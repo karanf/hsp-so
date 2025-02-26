@@ -49,6 +49,8 @@ import {
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 export default function SignIn() {
   const router = useRouter()
@@ -77,7 +79,10 @@ export default function SignIn() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-white">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-white relative">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <div className="w-full max-w-[400px] space-y-8">
         {/* Logo */}
         <div className="flex justify-center">
@@ -126,9 +131,14 @@ export default function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="flex items-center space-x-2">
-              <Checkbox id="remember" />
-              <Label htmlFor="remember" className="text-body2">Remember me</Label>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Checkbox id="remember" />
+                <Label htmlFor="remember" className="text-body2">Remember me</Label>
+              </div>
+              <Link href="/forgot-password" className="text-[#007F7A] hover:underline text-[0.875rem] font-normal leading-[1.43] tracking-[0.01071em]">
+                Forgot password?
+              </Link>
             </div>
           </div>
 

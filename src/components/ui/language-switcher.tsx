@@ -14,23 +14,25 @@ export function LanguageSwitcher({ defaultValue = "en", onValueChange }: Languag
       type="single" 
       defaultValue={defaultValue}
       onValueChange={onValueChange}
-      className="border border-[#DFDFDF] rounded-md p-1 bg-white"
+      className="border border-[#DFDFDF] rounded-md"
     >
       <ToggleGroupItem 
         value="en" 
-        className="flex items-center gap-1.5 px-2 py-1 rounded data-[state=on]:bg-[#F4F4F4]"
-        aria-label="Switch to English"
+        className="px-3 py-2 data-[state=on]:bg-[#E8F4F4] data-[state=on]:text-[#005151] hover:bg-[#E8F4F4] hover:text-[#005151]"
       >
-        <Image src="/flags/en.svg" width={20} height={20} alt="English" />
-        <span className="text-xs font-medium">EN</span>
+        <div className="flex items-center gap-2">
+          <Image src="/flags/en.svg" width={20} height={20} alt="English" />
+          <span className="text-sm font-medium">EN</span>
+        </div>
       </ToggleGroupItem>
       <ToggleGroupItem 
         value="es" 
-        className="flex items-center gap-1.5 px-2 py-1 rounded data-[state=on]:bg-[#F4F4F4]"
-        aria-label="Switch to Spanish"
+        className="px-3 py-2 data-[state=on]:bg-[#E8F4F4] data-[state=on]:text-[#005151] hover:bg-[#E8F4F4] hover:text-[#005151]"
       >
-        <Image src="/flags/es.svg" width={20} height={20} alt="Spanish" />
-        <span className="text-xs font-medium">ES</span>
+        <div className="flex items-center gap-2">
+          <Image src="/flags/es.svg" width={20} height={20} alt="Spanish" />
+          <span className="text-sm font-medium">ES</span>
+        </div>
       </ToggleGroupItem>
     </ToggleGroup>
   )

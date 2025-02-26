@@ -1057,10 +1057,17 @@ export default function Form() {
               {/* Welcome Message */}
               <div className="flex-1 px-8 flex items-center justify-between">
                 <div className="flex flex-col">
-                <h1 className="text-[#141414] font-sans text-[1.5rem] font-normal leading-[133.4%] [font-feature-settings:'liga'_off,'clig'_off]">
-                  Hi Bessie
-                </h1>
-                </div>
+                <span className="text-[#141414] font-sans text-[1.5rem] font-normal leading-[133.4%] [font-feature-settings:'liga'_off,'clig'_off]">
+                    Course Reservation
+                  </span>
+                  <span className="text-[#667085] font-sans text-base font-normal leading-[150%] [font-feature-settings:'liga'_off,'clig'_off]">
+                    {activeSection === 'student-details' && "Student Details"}
+                    {activeSection === 'parent1-details' && "Parent/Guardian 1 Details"}
+                    {activeSection === 'parent2-details' && "Parent/Guardian 2 Details"}
+                    {activeSection === 'additional-info' && "Additional Information"}
+                  </span>
+                  
+                      </div>
 
                 <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
@@ -1202,10 +1209,8 @@ export default function Form() {
                         </div>
                       )}
                     </Button>
-                    <div className="border-l border-[#DFDFDF] pl-4">
-                      <LanguageSwitcher />
-                    </div>
                   </div>
+                  <LanguageSwitcher />
                 </div>
               </div>
 
