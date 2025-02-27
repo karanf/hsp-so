@@ -19,8 +19,6 @@ pipelines:
             - npm ci
             - echo "Building project..."
             - NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
-            - echo "Exporting project..."
-            - npm run export
           artifacts:
             - out/**
             - public/**
@@ -53,8 +51,6 @@ pipelines:
             - npm ci
             - echo "Building project..."
             - NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
-            - echo "Exporting project..."
-            - npm run export
           artifacts:
             - out/**
             - public/**
