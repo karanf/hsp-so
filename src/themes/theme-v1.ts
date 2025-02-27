@@ -88,4 +88,16 @@ export const dropdownMenuStyles = {
     hover: "hover:bg-white/60 focus:bg-white/60",
     disabled: "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
   }
+}
+
+export const popoverStyles = {
+  content: {
+    base: "z-50 min-w-[8rem] overflow-hidden rounded-md border border-[#E8E8E8] bg-gradient-to-r from-white/10 via-white/30 to-white/10 backdrop-blur-[10px] p-1 text-popover-foreground shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]",
+    animation: "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+  },
+  item: {
+    base: "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors bg-transparent",
+    hover: "hover:bg-white/60 focus:bg-white/60",
+    disabled: "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+  }
 } 

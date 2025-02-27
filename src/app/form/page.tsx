@@ -40,6 +40,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
+import { popoverStyles } from "@/themes/theme-v1"
+import { CountryCombobox } from "@/components/ui/country-combobox"
+import { PhoneCountryCombobox } from "@/components/ui/phone-country-combobox"
 
 type State = {
   value: string;
@@ -608,9 +611,9 @@ export default function Form() {
   const [additionalProgress, setAdditionalProgress] = useState(0);
 
   // Health information states
-  const [hasAllergies, setHasAllergies] = useState(false);
-  const [hasTreatment, setHasTreatment] = useState(false);
-  const [hasDietary, setHasDietary] = useState(false);
+  const [hasAllergies, setHasAllergies] = useState<boolean | undefined>(undefined);
+  const [hasTreatment, setHasTreatment] = useState<boolean | undefined>(undefined);
+  const [hasDietary, setHasDietary] = useState<boolean | undefined>(undefined);
   const [allergiesDetails, setAllergiesDetails] = useState("");
   const [treatmentDetails, setTreatmentDetails] = useState("");
   const [dietaryDetails, setDietaryDetails] = useState("");
@@ -1313,28 +1316,12 @@ export default function Form() {
                     <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                       Country
                     </label>
-                    <Select value={studentAddressCountry} onValueChange={setStudentAddressCountry}>
-                      <SelectTrigger onFocus={() => handleFieldFocus('student-details')}>
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                          <SelectItem key={country.value} value={country.value}>
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-5 h-5">
-                                <Image
-                                  src={country.flag}
-                                  alt={`${country.label} flag`}
-                                  fill
-                                  className="object-cover rounded-sm"
-                                />
-                              </div>
-                              +{getCountryCallingCode(country.value)} {country.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <CountryCombobox
+                      countries={countries}
+                      value={studentAddressCountry}
+                      onValueChange={setStudentAddressCountry}
+                      onFocus={() => handleFieldFocus('student-details')}
+                    />
                   </div>
                 </div>
 
@@ -1369,8 +1356,8 @@ export default function Form() {
                       </SelectContent>
                     </Select>
                   </div>
+                  </div>
                 </div>
-              </div>
 
               {/* Student Phone */}
               <div>
@@ -1380,58 +1367,16 @@ export default function Form() {
                 </div>
                 <div className="flex gap-1">
                   <div className="w-[120px]">
-                    <Select value={studentPhoneCountry} onValueChange={setStudentPhoneCountry}>
-                      <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('student-details')}>
-                        <SelectValue placeholder={<>
-                          <div className="flex items-center gap-2">
-                            <div className="relative w-5 h-5">
-                              <Image 
-                                src="/flags/US.svg"
-                                alt="United States flag"
-                                fill
-                                className="object-cover rounded-sm"
-                              />
-                            </div>
-                            +1
-                          </div>
-                        </>}>
-                          {studentPhoneCountry && (
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-5 h-5">
-                                <Image
-                                  src={countries.find(c => c.value === studentPhoneCountry)?.flag || "/flags/US.svg"}
-                                  alt={`${countries.find(c => c.value === studentPhoneCountry)?.label || "United States"} flag`}
-                                  fill
-                                  className="object-cover rounded-sm"
-                                />
-                              </div>
-                              +{getCountryCallingCode(studentPhoneCountry)}
-                            </div>
-                          )}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                          <SelectItem key={country.value} value={country.value}>
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-5 h-5">
-                                <Image
-                                  src={country.flag}
-                                  alt={`${country.label} flag`}
-                                  fill
-                                  className="object-cover rounded-sm"
-                                />
-                              </div>
-                              +{getCountryCallingCode(country.value)} {country.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <PhoneCountryCombobox
+                      countries={countries}
+                      value={studentPhoneCountry}
+                      onValueChange={setStudentPhoneCountry}
+                      onFocus={() => handleFieldFocus('student-details')}
+                      getCountryCallingCode={getCountryCallingCode}
+                    />
                   </div>
                   <Input
                     placeholder="Enter phone number"
-                    className="flex-1"
                     value={studentPhone}
                     onChange={(e) => setStudentPhone(e.target.value)}
                     onFocus={() => handleFieldFocus('student-details')}
@@ -1515,33 +1460,17 @@ export default function Form() {
                         />
                       </div>
                       <div className="w-1/3">
-                        <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                          Country
-                        </label>
-                        <Select value={parent1AddressCountry} onValueChange={setParent1AddressCountry}>
-                          <SelectTrigger onFocus={() => handleFieldFocus('parent1-details')}>
-                            <SelectValue placeholder="Select..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                              <SelectItem key={country.value} value={country.value}>
-                          <div className="flex items-center gap-2">
-                                  <div className="relative w-5 h-5">
-                                    <Image
-                                      src={country.flag}
-                                      alt={`${country.label} flag`}
-                                      fill
-                                      className="object-cover rounded-sm"
-                                    />
-                                  </div>
-                                  +{getCountryCallingCode(country.value)} {country.label}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+                    <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
+                      Country
+                    </label>
+                        <CountryCombobox
+                          countries={countries}
+                          value={parent1AddressCountry}
+                          onValueChange={setParent1AddressCountry}
+                          onFocus={() => handleFieldFocus('parent1-details')}
+                        />
+                  </div>
+                </div>
 
                     <div className="flex gap-4">
                       <div className="w-1/3">
@@ -1577,68 +1506,26 @@ export default function Form() {
                     </div>
                   </>
                             )}
-                          </div>
+              </div>
 
               {/* Parent1 Phone */}
               <div>
                 <div className="flex items-center gap-1 mb-2">
-                  <label className="text-[#141414] text-base">Parent / Guardian 1 Phone</label>
+                  <label className="text-[#141414] text-base">Parent/Guardian 1 Phone</label>
                   <span className="text-[#D32F2F]">*</span>
                 </div>
                 <div className="flex gap-1">
                   <div className="w-[120px]">
-                    <Select value={parent1PhoneCountry} onValueChange={setParent1PhoneCountry}>
-                      <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('parent1-details')}>
-                        <SelectValue placeholder={<>
-                          <div className="flex items-center gap-2">
-                            <div className="relative w-5 h-5">
-                              <Image 
-                                src="/flags/US.svg"
-                                alt="United States flag"
-                                fill
-                                className="object-cover rounded-sm"
-                              />
-                            </div>
-                            +1
-                          </div>
-                        </>}>
-                          {parent1PhoneCountry && (
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-5 h-5">
-                                <Image
-                                  src={countries.find(c => c.value === parent1PhoneCountry)?.flag || "/flags/US.svg"}
-                                  alt={`${countries.find(c => c.value === parent1PhoneCountry)?.label || "United States"} flag`}
-                                  fill
-                                  className="object-cover rounded-sm"
-                                />
-                              </div>
-                              +{getCountryCallingCode(parent1PhoneCountry)}
-                            </div>
-                          )}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                          <SelectItem key={country.value} value={country.value}>
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-5 h-5">
-                                <Image
-                                  src={country.flag}
-                                  alt={`${country.label} flag`}
-                                  fill
-                                  className="object-cover rounded-sm"
-                                />
-                              </div>
-                              +{getCountryCallingCode(country.value)} {country.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <PhoneCountryCombobox
+                      countries={countries}
+                      value={parent1PhoneCountry}
+                      onValueChange={setParent1PhoneCountry}
+                      onFocus={() => handleFieldFocus('parent1-details')}
+                      getCountryCallingCode={getCountryCallingCode}
+                    />
                   </div>
                   <Input
                     placeholder="Enter phone number"
-                    className="flex-1"
                     value={parent1Phone}
                     onChange={(e) => setParent1Phone(e.target.value)}
                     onFocus={() => handleFieldFocus('parent1-details')}
@@ -1825,32 +1712,13 @@ export default function Form() {
                             <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                               Country
                             </label>
-                            <Select 
-                              value={parent2AddressCountry} 
+                            <CountryCombobox
+                              countries={countries}
+                              value={parent2AddressCountry}
                               onValueChange={setParent2AddressCountry}
+                              onFocus={() => handleFieldFocus('parent2-details')}
                               disabled={isSoleGuardian === "yes"}
-                            >
-                              <SelectTrigger onFocus={() => handleFieldFocus('parent2-details')}>
-                                <SelectValue placeholder="Select..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                                  <SelectItem key={country.value} value={country.value}>
-                                    <div className="flex items-center gap-2">
-                                      <div className="relative w-5 h-5">
-                                        <Image
-                                          src={country.flag}
-                                          alt={`${country.label} flag`}
-                                          fill
-                                          className="object-cover rounded-sm"
-                                        />
-                                      </div>
-                                      +{getCountryCallingCode(country.value)} {country.label}
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            />
                           </div>
                         </div>
 
@@ -1894,74 +1762,29 @@ export default function Form() {
                   {/* Parent2 Phone */}
                   <div>
                     <div className="flex items-center gap-1 mb-2">
-                      <label className="text-[#141414] text-base">Parent / Guardian 2 Phone</label>
+                      <label className="text-[#141414] text-base">Parent/Guardian 2 Phone</label>
                       <span className="text-[#D32F2F]">*</span>
                     </div>
                     <div className="flex gap-1">
                       <div className="w-[120px]">
-                        <Select 
-                          value={parent2PhoneCountry} 
+                        <PhoneCountryCombobox
+                          countries={countries}
+                          value={parent2PhoneCountry}
                           onValueChange={setParent2PhoneCountry}
+                          onFocus={() => handleFieldFocus('parent2-details')}
                           disabled={isSoleGuardian === "yes"}
-                        >
-                          <SelectTrigger className="w-[100px]" onFocus={() => handleFieldFocus('parent2-details')}>
-                            <SelectValue placeholder={<>
-                              <div className="flex items-center gap-2">
-                                <div className="relative w-5 h-5">
-                                  <Image 
-                                    src="/flags/US.svg"
-                                    alt="United States flag"
-                                    fill
-                                    className="object-cover rounded-sm"
-                                  />
-                                </div>
-                                +1
-                              </div>
-                            </>}>
-                              {parent2PhoneCountry && (
-                                <div className="flex items-center gap-2">
-                                  <div className="relative w-5 h-5">
-                                    <Image
-                                      src={countries.find(c => c.value === parent2PhoneCountry)?.flag || "/flags/US.svg"}
-                                      alt={`${countries.find(c => c.value === parent2PhoneCountry)?.label || "United States"} flag`}
-                                      fill
-                                      className="object-cover rounded-sm"
-                                    />
-                                  </div>
-                                  +{getCountryCallingCode(parent2PhoneCountry)}
-                                </div>
-                              )}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-                              <SelectItem key={country.value} value={country.value}>
-                                <div className="flex items-center gap-2">
-                                  <div className="relative w-5 h-5">
-                                    <Image
-                                      src={country.flag}
-                                      alt={`${country.label} flag`}
-                                      fill
-                                      className="object-cover rounded-sm"
-                                    />
-                                  </div>
-                                  +{getCountryCallingCode(country.value)} {country.label}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                  </div>
-                  <Input
-                    placeholder="Enter phone number"
-                    className="flex-1"
+                          getCountryCallingCode={getCountryCallingCode}
+                        />
+                      </div>
+                      <Input
+                        placeholder="Enter phone number"
                         value={parent2Phone}
                         onChange={(e) => setParent2Phone(e.target.value)}
                         onFocus={() => handleFieldFocus('parent2-details')}
                         disabled={isSoleGuardian === "yes"}
-                  />
-                </div>
-              </div>
+                      />
+                    </div>
+                  </div>
 
                   {/* Parent2 Email */}
                   <div className="w-1/3">
@@ -2001,101 +1824,121 @@ export default function Form() {
                 
                 {/* Allergies */}
                 <div className="space-y-4 mb-6">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="has-allergies"
-                      checked={hasAllergies}
-                      onCheckedChange={(checked) => setHasAllergies(checked as boolean)}
-                    />
-                    <label
-                      htmlFor="has-allergies"
-                      className="text-base leading-none"
-                    >
-                      Allergies?
-                    </label>
-                  </div>
-                  
-                  {hasAllergies && (
-                    <div className="w-1/3">
-                      <div className="flex items-center gap-1">
-                        <label className="text-[#141414] text-base">Please state which allergies</label>
-                        <span className="text-[#D32F2F]">*</span>
-                      </div>
-                      <Input
-                        placeholder="Enter allergies"
-                        value={allergiesDetails}
-                        onChange={(e) => setAllergiesDetails(e.target.value)}
-                        onFocus={() => handleFieldFocus('additional-info')}
-                      />
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-1">
+                      <label className="text-[#141414] text-base">Allergies?</label>
+                      <span className="text-[#D32F2F]">*</span>
                     </div>
-                  )}
+                    <RadioGroup
+                      value={hasAllergies === true ? "yes" : hasAllergies === false ? "no" : undefined}
+                      onValueChange={(value) => {
+                        setHasAllergies(value === "yes");
+                        if (value === "no") setAllergiesDetails("");
+                      }}
+                    >
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="allergies-no" />
+                          <label htmlFor="allergies-no">No</label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="allergies-yes" />
+                          <label htmlFor="allergies-yes">Yes</label>
+                        </div>
+                        {hasAllergies && (
+                          <div className="flex-1 max-w-xs">
+                            <Input
+                              placeholder="Please explain"
+                              value={allergiesDetails}
+                              onChange={(e) => setAllergiesDetails(e.target.value)}
+                              onFocus={() => handleFieldFocus('additional-info')}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </RadioGroup>
+                  </div>
                 </div>
 
                 {/* Physical/psychological treatment */}
                 <div className="space-y-4 mb-6">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="has-treatment"
-                      checked={hasTreatment}
-                      onCheckedChange={(checked) => setHasTreatment(checked as boolean)}
-                    />
-                    <div className="flex flex-col gap-1">
-                      <label
-                        htmlFor="has-treatment"
-                        className="text-base leading-none"
-                      >
-                        Physical/psychological treatment?
-                      </label>
-                      <span className="text-sm text-[#667085]">
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <div className="flex items-center gap-1">
+                        <label className="text-[#141414] text-base">Physical/psychological treatment?</label>
+                        <span className="text-[#D32F2F]">*</span>
+                      </div>
+                      <span className="text-sm text-[#667085] block mt-1">
                         Has the student had anxiety, depression, eating disorder, suicidal thoughts, seen a therapist/psychologist etc. within the last recent years?
                       </span>
                     </div>
-                  </div>
-                  
-                  {hasTreatment && (
-                    <div className="w-1/3">
-                      <div className="flex items-center gap-1">
-                        <label className="text-[#141414] text-base">Please state which physical/psychological treatments</label>
-                        <span className="text-[#D32F2F]">*</span>
+                    <RadioGroup
+                      value={hasTreatment === true ? "yes" : hasTreatment === false ? "no" : undefined}
+                      onValueChange={(value) => {
+                        setHasTreatment(value === "yes");
+                        if (value === "no") setTreatmentDetails("");
+                      }}
+                    >
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="treatment-no" />
+                          <label htmlFor="treatment-no">No</label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="treatment-yes" />
+                          <label htmlFor="treatment-yes">Yes</label>
+                        </div>
+                        {hasTreatment && (
+                          <div className="flex-1 max-w-xs">
+                            <Input
+                              placeholder="Please explain"
+                              value={treatmentDetails}
+                              onChange={(e) => setTreatmentDetails(e.target.value)}
+                              onFocus={() => handleFieldFocus('additional-info')}
+                            />
+                          </div>
+                        )}
                       </div>
-                      <Input
-                        placeholder="Enter treatments"
-                        value={treatmentDetails}
-                        onChange={(e) => setTreatmentDetails(e.target.value)}
-                        onFocus={() => handleFieldFocus('additional-info')}
-                      />
-                    </div>
-                  )}
+                    </RadioGroup>
+                  </div>
                 </div>
 
                 {/* Dietary requirements */}
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="has-dietary"
-                      checked={hasDietary}
-                      onCheckedChange={(checked) => setHasDietary(checked as boolean)}
-                    />
-                    <label
-                      htmlFor="has-dietary"
-                      className="text-base leading-none"
-                    >
-                      Dietary requirements?
-                    </label>
-                  </div>
-                  
-                  {hasDietary && (
-                    <div className="w-1/3">
-                      <div className="flex items-center gap-1">
-                        <label className="text-[#141414] text-base">Please state which dietary requirements</label>
-                        <span className="text-[#D32F2F]">*</span>
-                      </div>
-                      <Input
-                        placeholder="Enter dietary requirements"
-                        onFocus={() => handleFieldFocus('additional-info')}
-                      />
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-1">
+                      <label className="text-[#141414] text-base">Dietary requirements?</label>
+                      <span className="text-[#D32F2F]">*</span>
                     </div>
-                  )}
+                    <RadioGroup
+                      value={hasDietary === true ? "yes" : hasDietary === false ? "no" : undefined}
+                      onValueChange={(value) => {
+                        setHasDietary(value === "yes");
+                        if (value === "no") setDietaryDetails("");
+                      }}
+                    >
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="dietary-no" />
+                          <label htmlFor="dietary-no">No</label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="dietary-yes" />
+                          <label htmlFor="dietary-yes">Yes</label>
+                        </div>
+                        {hasDietary && (
+                          <div className="flex-1 max-w-xs">
+                            <Input
+                              placeholder="Please explain"
+                              value={dietaryDetails}
+                              onChange={(e) => setDietaryDetails(e.target.value)}
+                              onFocus={() => handleFieldFocus('additional-info')}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </RadioGroup>
+                  </div>
                 </div>
               </div>
             </form>
