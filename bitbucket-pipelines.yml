@@ -17,8 +17,9 @@ pipelines:
             - npm ci
             - npm run lint
             - npm run build
+            - npm run export
           artifacts:
-            - .next/**
+            - out/**
             - node_modules/**
             - public/**
             - package.json
@@ -34,8 +35,9 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
                 S3_BUCKET: hutjig-xuksi8-sYccek
-                LOCAL_PATH: 'build'
+                LOCAL_PATH: 'out'
                 ACL: 'public-read'
+                DELETE_FLAG: 'true'
 
     main:
       - step:
