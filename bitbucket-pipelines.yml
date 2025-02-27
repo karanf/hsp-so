@@ -14,9 +14,12 @@ pipelines:
             - npm
             - next-cache
           script:
+            - node --version
+            - npm --version
             - npm ci
-            - npm run lint || true
-            - npm run build
+            - echo "Building project..."
+            - NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
+            - echo "Exporting project..."
             - npm run export
           artifacts:
             - out/**
@@ -46,9 +49,12 @@ pipelines:
             - npm
             - next-cache
           script:
+            - node --version
+            - npm --version
             - npm ci
-            - npm run lint || true
-            - npm run build
+            - echo "Building project..."
+            - NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
+            - echo "Exporting project..."
             - npm run export
           artifacts:
             - out/**
