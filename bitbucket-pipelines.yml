@@ -23,15 +23,14 @@ pipelines:
             - npm run export
           artifacts:
             - out/**
-            - node_modules/**
             - public/**
-            - package.json
-            - package-lock.json
+            - package*.json
             - next.config.js
 
       - step:
           name: Deploy to S3
           script:
+            - npm ci
             - pipe: atlassian/aws-s3-deploy:0.3.8
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
@@ -58,10 +57,8 @@ pipelines:
             - npm run export
           artifacts:
             - out/**
-            - node_modules/**
             - public/**
-            - package.json
-            - package-lock.json
+            - package*.json
             - next.config.js
 
       - step:
@@ -69,6 +66,7 @@ pipelines:
           deployment: production
           trigger: manual
           script:
+            - npm ci
             - pipe: atlassian/aws-s3-deploy:0.3.8
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
