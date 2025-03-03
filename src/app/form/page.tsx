@@ -1814,11 +1814,11 @@ export default function Form() {
                     >
                       <div className="flex items-center gap-6">
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="allergies-no" />
+                          <RadioGroupItem value="no" id="allergies-no" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="allergies-no">No</label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="allergies-yes" />
+                          <RadioGroupItem value="yes" id="allergies-yes" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="allergies-yes">Yes</label>
                         </div>
                         {hasAllergies && (
@@ -1857,11 +1857,11 @@ export default function Form() {
                     >
                       <div className="flex items-center gap-6">
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="treatment-no" />
+                          <RadioGroupItem value="no" id="treatment-no" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="treatment-no">No</label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="treatment-yes" />
+                          <RadioGroupItem value="yes" id="treatment-yes" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="treatment-yes">Yes</label>
                         </div>
                         {hasTreatment && (
@@ -1895,11 +1895,11 @@ export default function Form() {
                     >
                       <div className="flex items-center gap-6">
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="dietary-no" />
+                          <RadioGroupItem value="no" id="dietary-no" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="dietary-no">No</label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="dietary-yes" />
+                          <RadioGroupItem value="yes" id="dietary-yes" onFocus={() => handleFieldFocus('additional-info')} />
                           <label htmlFor="dietary-yes">Yes</label>
                         </div>
                         {hasDietary && (
