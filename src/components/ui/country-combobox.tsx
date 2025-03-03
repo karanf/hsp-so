@@ -139,6 +139,11 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
                       alt={`${countries.find(c => c.value === value)?.label || "United States"} flag`}
                       fill
                       className="object-cover rounded-sm"
+                      priority
+                      onError={(e) => {
+                        const img = e.target as HTMLImageElement;
+                        img.src = "/flags/US.svg";
+                      }}
                     />
                   </div>
                   <span className="truncate">{countries.find(c => c.value === value)?.label || "Select..."}</span>
@@ -195,6 +200,11 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
                         alt={`${country.label} flag`}
                         fill
                         className="object-cover rounded-sm"
+                        priority
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.src = "/flags/US.svg";
+                        }}
                       />
                     </div>
                     {country.label}

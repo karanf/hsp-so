@@ -147,6 +147,11 @@ export function PhoneCountryCombobox({
                     alt={`${countries.find(c => c.value === value)?.label || "United States"} flag`}
                     fill
                     className="object-cover rounded-sm"
+                    priority
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.src = "/flags/US.svg";
+                    }}
                   />
                 </div>
                 <span className="truncate">+{getCountryCallingCode(value || "us")}</span>
@@ -199,6 +204,11 @@ export function PhoneCountryCombobox({
                         alt={`${country.label} flag`}
                         fill
                         className="object-cover rounded-sm"
+                        priority
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.src = "/flags/US.svg";
+                        }}
                       />
                     </div>
                     +{getCountryCallingCode(country.value)} {country.label}
