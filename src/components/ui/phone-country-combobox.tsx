@@ -33,8 +33,30 @@ export function PhoneCountryCombobox({
   onFocus 
 }: PhoneCountryComboboxProps) {
   const [open, setOpen] = React.useState(false)
+  const [highlightedIndex, setHighlightedIndex] = React.useState(0)
+  const [search, setSearch] = React.useState("")
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const isTabbing = React.useRef(false)
+  const sortedCountries = React.useMemo(() => 
+    countries.sort((a, b) => a.label.localeCompare(b.label)), 
+    [countries]
+  )
+
+  const filteredCountries = React.useMemo(() => {
+    if (!search.trim()) return sortedCountries
+    const searchTerm = search.toLowerCase().trim()
+    return sortedCountries.filter(country => {
+      const label = country.label.toLowerCase()
+      const value = country.value.toLowerCase()
+      const callingCode = getCountryCallingCode(country.value)
+      return value === searchTerm || label.startsWith(searchTerm) || callingCode.includes(searchTerm)
+    })
+  }, [sortedCountries, search, getCountryCallingCode])
+
+  // Reset highlight index when filtered results change
+  React.useEffect(() => {
+    setHighlightedIndex(0)
+  }, [filteredCountries])
 
   const findFocusableElement = (node: HTMLElement | null, forward: boolean): HTMLElement | null => {
     if (!node) return null
@@ -54,13 +76,44 @@ export function PhoneCountryCombobox({
     return elements[targetIndex] || null
   }
 
-  const handleFocus = () => {
-    setOpen(true)
-    onFocus?.()
-  }
-
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen)
+    if (!isOpen) {
+      setSearch("")
+    }
+    if (isOpen && onFocus) {
+      onFocus()
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) return
+
+    const maxIndex = filteredCountries.length - 1
+    if (maxIndex < 0) return // No results to navigate
+
+    switch (e.key) {
+      case "ArrowDown":
+      case "ArrowUp":
+        e.preventDefault()
+        const direction = e.key === "ArrowDown" ? 1 : -1
+        setHighlightedIndex((prev) => {
+          const next = prev + direction
+          if (next < 0) return maxIndex
+          if (next > maxIndex) return 0
+          return next
+        })
+        break
+      case "Enter":
+        e.preventDefault()
+        const selectedCountry = filteredCountries[highlightedIndex]
+        if (selectedCountry) {
+          onValueChange(selectedCountry.value)
+          setOpen(false)
+          setSearch("")
+        }
+        break
+    }
   }
 
   return (
@@ -72,7 +125,6 @@ export function PhoneCountryCombobox({
             variant="secondary"
             role="combobox"
             className="w-full justify-between font-normal pr-3"
-            onFocus={handleFocus}
             onKeyDown={(e) => {
               if (e.key === "Tab" && e.shiftKey) {
                 const prevElement = findFocusableElement(buttonRef.current, false)
@@ -109,46 +161,57 @@ export function PhoneCountryCombobox({
           <CommandInput 
             placeholder="Search country..." 
             className="bg-transparent"
+            value={search}
+            onValueChange={setSearch}
             onKeyDown={(e) => {
               if (e.key === "Tab") {
                 e.preventDefault()
                 setOpen(false)
                 const nextElement = findFocusableElement(buttonRef.current, !e.shiftKey)
                 if (nextElement) nextElement.focus()
+              } else {
+                handleKeyDown(e)
               }
             }}
           />
           <CommandEmpty>No country found.</CommandEmpty>
           <CommandGroup className="max-h-[250px] overflow-y-auto">
-            {countries.sort((a, b) => a.label.localeCompare(b.label)).map((country) => (
-              <CommandItem
-                key={country.value}
-                value={country.value}
-                className={cn(popoverStyles.item.base, popoverStyles.item.hover)}
-                onSelect={(currentValue) => {
-                  onValueChange(currentValue)
-                  setOpen(false)
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="relative w-5 h-5">
-                    <Image
-                      src={country.flag}
-                      alt={`${country.label} flag`}
-                      fill
-                      className="object-cover rounded-sm"
-                    />
-                  </div>
-                  +{getCountryCallingCode(country.value)} {country.label}
-                </div>
-                <Check
+            {filteredCountries.map((country, index) => {
+              const isHighlighted = index === highlightedIndex
+              return (
+                <CommandItem
+                  key={country.value}
+                  value={country.value}
                   className={cn(
-                    "ml-auto h-4 w-4",
-                    value === country.value ? "opacity-100" : "opacity-0"
+                    popoverStyles.item.base, 
+                    popoverStyles.item.hover,
+                    isHighlighted && "bg-accent"
                   )}
-                />
-              </CommandItem>
-            ))}
+                  onSelect={(currentValue) => {
+                    onValueChange(currentValue)
+                    setOpen(false)
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-5 h-5">
+                      <Image
+                        src={country.flag}
+                        alt={`${country.label} flag`}
+                        fill
+                        className="object-cover rounded-sm"
+                      />
+                    </div>
+                    +{getCountryCallingCode(country.value)} {country.label}
+                  </div>
+                  <Check
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      value === country.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              )
+            })}
           </CommandGroup>
         </Command>
       </PopoverContent>

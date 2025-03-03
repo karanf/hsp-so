@@ -43,6 +43,7 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { popoverStyles } from "@/themes/theme-v1"
 import { CountryCombobox } from "@/components/ui/country-combobox"
 import { PhoneCountryCombobox } from "@/components/ui/phone-country-combobox"
+import { StateCombobox } from "@/components/ui/state-combobox"
 
 type State = {
   value: string;
@@ -1339,25 +1340,16 @@ export default function Form() {
                     <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                       State / Region / Province
                     </label>
-                    <Select
+                    <StateCombobox
+                      states={getStatesForCountry(studentAddressCountry)}
                       value={studentState}
-                      onValueChange={setStudentState}
+                      onValueChange={(value) => setStudentState(value)}
                       disabled={!studentAddressCountry}
-                    >
-                      <SelectTrigger onFocus={() => handleFieldFocus('student-details')}>
-                        <SelectValue placeholder="Select state..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getStatesForCountry(studentAddressCountry).map((state: State) => (
-                          <SelectItem key={state.value} value={state.value}>
-                            {state.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                      onFocus={() => handleFieldFocus('student-details')}
+                    />
                   </div>
                 </div>
+              </div>
 
               {/* Student Phone */}
               <div>
@@ -1486,27 +1478,18 @@ export default function Form() {
                         <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                           State / Region / Province
                         </label>
-                        <Select
+                        <StateCombobox
+                          states={getStatesForCountry(parent1AddressCountry)}
                           value={parent1State}
-                          onValueChange={setParent1State}
+                          onValueChange={(value) => setParent1State(value)}
                           disabled={!parent1AddressCountry}
-                        >
-                          <SelectTrigger onFocus={() => handleFieldFocus('parent1-details')}>
-                            <SelectValue placeholder="Select state..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {getStatesForCountry(parent1AddressCountry).map((state: State) => (
-                              <SelectItem key={state.value} value={state.value}>
-                                {state.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          onFocus={() => handleFieldFocus('parent1-details')}
+                        />
                       </div>
                     </div>
                   </>
                             )}
-              </div>
+                          </div>
 
               {/* Parent1 Phone */}
               <div>
@@ -1687,7 +1670,7 @@ export default function Form() {
                     {!parent2SameAddress && (
                       <>
                         <div className="w-1/3">
-                          <Input
+                  <Input
                             placeholder="Enter street address"
                             label="Street Address"
                             value={parent2Street}
@@ -1718,9 +1701,9 @@ export default function Form() {
                               onValueChange={setParent2AddressCountry}
                               onFocus={() => handleFieldFocus('parent2-details')}
                               disabled={isSoleGuardian === "yes"}
-                            />
-                          </div>
-                        </div>
+                  />
+                </div>
+              </div>
 
                         <div className="flex gap-4">
                           <div className="w-1/3">
@@ -1737,22 +1720,13 @@ export default function Form() {
                             <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                               State / Region / Province
                             </label>
-                            <Select
+                            <StateCombobox
+                              states={getStatesForCountry(parent2AddressCountry)}
                               value={parent2State}
-                              onValueChange={setParent2State}
+                              onValueChange={(value) => setParent2State(value)}
                               disabled={!parent2AddressCountry || isSoleGuardian === "yes"}
-                            >
-                              <SelectTrigger onFocus={() => handleFieldFocus('parent2-details')}>
-                                <SelectValue placeholder="Select state..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getStatesForCountry(parent2AddressCountry).map((state: State) => (
-                                  <SelectItem key={state.value} value={state.value}>
-                                    {state.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              onFocus={() => handleFieldFocus('parent2-details')}
+                            />
                           </div>
                         </div>
                       </>
@@ -1760,7 +1734,7 @@ export default function Form() {
                           </div>
 
                   {/* Parent2 Phone */}
-                  <div>
+              <div>
                     <div className="flex items-center gap-1 mb-2">
                       <label className="text-[#141414] text-base">Parent/Guardian 2 Phone</label>
                       <span className="text-[#D32F2F]">*</span>

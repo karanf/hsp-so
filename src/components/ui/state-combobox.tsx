@@ -7,47 +7,44 @@ import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { popoverStyles } from "@/themes/theme-v1"
-import Image from "next/image"
 
-interface Country {
+interface State {
   value: string
   label: string
-  flag: string
 }
 
-interface CountryComboboxProps {
-  countries: Country[]
+interface StateComboboxProps {
+  states: State[]
   value?: string
   onValueChange: (value: string) => void
   disabled?: boolean
   onFocus?: () => void
 }
 
-export function CountryCombobox({ countries, value, onValueChange, disabled, onFocus }: CountryComboboxProps) {
+export function StateCombobox({ states, value, onValueChange, disabled, onFocus }: StateComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [highlightedIndex, setHighlightedIndex] = React.useState(0)
   const [search, setSearch] = React.useState("")
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const isTabbing = React.useRef(false)
-  const sortedCountries = React.useMemo(() => 
-    countries.sort((a, b) => a.label.localeCompare(b.label)), 
-    [countries]
+  const sortedStates = React.useMemo(() => 
+    states.sort((a, b) => a.label.localeCompare(b.label)), 
+    [states]
   )
 
-  const filteredCountries = React.useMemo(() => {
-    if (!search.trim()) return sortedCountries
+  const filteredStates = React.useMemo(() => {
+    if (!search.trim()) return sortedStates
     const searchTerm = search.toLowerCase().trim()
-    return sortedCountries.filter(country => {
-      const label = country.label.toLowerCase()
-      const value = country.value.toLowerCase()
-      return value === searchTerm || label.startsWith(searchTerm)
+    return sortedStates.filter(state => {
+      const label = state.label.toLowerCase()
+      return label.includes(searchTerm)
     })
-  }, [sortedCountries, search])
+  }, [sortedStates, search])
 
   // Reset highlight index when filtered results change
   React.useEffect(() => {
     setHighlightedIndex(0)
-  }, [filteredCountries])
+  }, [filteredStates])
 
   const findFocusableElement = (node: HTMLElement | null, forward: boolean): HTMLElement | null => {
     if (!node) return null
@@ -80,7 +77,7 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!open) return
 
-    const maxIndex = filteredCountries.length - 1
+    const maxIndex = filteredStates.length - 1
     if (maxIndex < 0) return // No results to navigate
 
     switch (e.key) {
@@ -97,9 +94,9 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
         break
       case "Enter":
         e.preventDefault()
-        const selectedCountry = filteredCountries[highlightedIndex]
-        if (selectedCountry) {
-          onValueChange(selectedCountry.value)
+        const selectedState = filteredStates[highlightedIndex]
+        if (selectedState) {
+          onValueChange(selectedState.value)
           setOpen(false)
           setSearch("")
         }
@@ -131,21 +128,9 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
             fullWidth
           >
             <div className="flex-1">
-              {value ? (
-                <div className="flex items-left gap-2">
-                  <div className="relative w-5 h-5 flex-shrink-0">
-                    <Image
-                      src={countries.find(c => c.value === value)?.flag || "/flags/US.svg"}
-                      alt={`${countries.find(c => c.value === value)?.label || "United States"} flag`}
-                      fill
-                      className="object-cover rounded-sm"
-                    />
-                  </div>
-                  <span className="truncate">{countries.find(c => c.value === value)?.label || "Select..."}</span>
-                </div>
-              ) : (
-                "Select..."
-              )}
+              <span className="truncate">
+                {value ? sortedStates.find(s => s.value === value)?.label || "Select..." : "Select..."}
+              </span>
             </div>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -154,7 +139,7 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
       <PopoverContent className="min-w-[200px]" align="start">
         <Command className="bg-transparent">
           <CommandInput 
-            placeholder="Search country..." 
+            placeholder="Search state..." 
             className="bg-transparent"
             value={search}
             onValueChange={setSearch}
@@ -169,14 +154,14 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
               }
             }}
           />
-          <CommandEmpty>No country found.</CommandEmpty>
+          <CommandEmpty>No state found.</CommandEmpty>
           <CommandGroup className="max-h-[250px] overflow-y-auto">
-            {filteredCountries.map((country, index) => {
+            {filteredStates.map((state, index) => {
               const isHighlighted = index === highlightedIndex
               return (
                 <CommandItem
-                  key={country.value}
-                  value={country.value}
+                  key={state.value}
+                  value={state.value}
                   className={cn(
                     popoverStyles.item.base, 
                     popoverStyles.item.hover,
@@ -185,24 +170,13 @@ export function CountryCombobox({ countries, value, onValueChange, disabled, onF
                   onSelect={(currentValue) => {
                     onValueChange(currentValue)
                     setOpen(false)
-                    setSearch("")
                   }}
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-5 h-5">
-                      <Image
-                        src={country.flag}
-                        alt={`${country.label} flag`}
-                        fill
-                        className="object-cover rounded-sm"
-                      />
-                    </div>
-                    {country.label}
-                  </div>
+                  {state.label}
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === country.value ? "opacity-100" : "opacity-0"
+                      value === state.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
