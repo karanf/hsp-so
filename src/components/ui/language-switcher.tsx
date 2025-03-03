@@ -29,7 +29,7 @@ export function LanguageSwitcher({ defaultValue = "en", onValueChange }: Languag
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 relative">
               <Image
-                src="/flags/ES.svg"
+                src="/flags/es.svg"
                 alt="Spanish"
                 fill
                 className="object-cover rounded-sm"
