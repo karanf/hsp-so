@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronDown, Home, User, Settings, LogOut, SquareCheck, FileCheck, X, CheckCircle2 } from "lucide-react"
+import { ChevronDown, User, Settings, LogOut, SquareCheck, FileCheck, X, CheckCircle2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -11,15 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Card } from "@/components/ui/card"
 import { useState, useEffect, Suspense } from "react"
 import { Progress } from "@/components/ui/progress"
@@ -46,7 +38,14 @@ function DashboardContent() {
         className: "bg-[#EDF7ED] border-[#2E7D32] text-[#1E4620]",
       })
     }
-  }, [])
+    if (searchParams.get("success")) {
+      toast({
+        title: "Payment successful",
+        description: "Thank you for your payment. Your application has been submitted.",
+        variant: "default",
+      });
+    }
+  }, [searchParams, toast])
 
   const handleLogout = () => {
     // In a real app, we would clear auth tokens/session here

@@ -692,64 +692,79 @@ export default function Form() {
   // Calculate form progress
   useEffect(() => {
     // Student Details Progress (7 required fields)
-    let studentTotalFields = 7;
+    const studentFields = {
+      name: studentName,
+      street: studentStreet,
+      city: studentCity,
+      country: studentAddressCountry,
+      postal: studentPostal,
+      phone: studentPhone,
+      email: studentEmail,
+      state: studentState,
+      phoneCountry: studentPhoneCountry
+    };
+    const studentTotalFields = Object.keys(studentFields).length;
     let studentCompletedFields = 0;
-    if (studentName) studentCompletedFields++;
-    if (studentStreet) studentCompletedFields++;
-    if (studentCity) studentCompletedFields++;
-    if (studentAddressCountry) studentCompletedFields++;
-    if (studentPostal) studentCompletedFields++;
-    if (studentPhone) studentCompletedFields++;
-    if (studentEmail) studentCompletedFields++;
+    for (const field in studentFields) {
+      if (studentFields[field]) studentCompletedFields++;
+    }
     setStudentProgress(Math.round((studentCompletedFields / studentTotalFields) * 100));
 
     // Parent 1 Details Progress (8 required fields including guardian question)
-    let parent1TotalFields = 8;
+    const parent1Fields = {
+      name: parent1Name,
+      street: parent1Street,
+      city: parent1City,
+      country: parent1AddressCountry,
+      postal: parent1Postal,
+      phone: parent1Phone,
+      email: parent1Email,
+      state: parent1State,
+      phoneCountry: parent1PhoneCountry,
+      sameAddress: parent1SameAddress,
+      isSoleGuardian: isSoleGuardian,
+      guardianshipDocument: guardianshipDocument?.name
+    };
+    const parent1TotalFields = Object.keys(parent1Fields).length;
     let parent1CompletedFields = 0;
-    if (parent1Name) parent1CompletedFields++;
-    if (parent1SameAddress || parent1Street) parent1CompletedFields++;
-    if (parent1SameAddress || parent1City) parent1CompletedFields++;
-    if (parent1SameAddress || parent1AddressCountry) parent1CompletedFields++;
-    if (parent1SameAddress || parent1Postal) parent1CompletedFields++;
-    if (parent1Phone) parent1CompletedFields++;
-    if (parent1Email) parent1CompletedFields++;
-    if (isSoleGuardian) parent1CompletedFields++;
-    if (isSoleGuardian === "yes" && guardianshipDocument) parent1CompletedFields++;
-    if (isSoleGuardian === "yes") parent1TotalFields++;
+    for (const field in parent1Fields) {
+      if (parent1Fields[field]) parent1CompletedFields++;
+    }
     setParent1Progress(Math.round((parent1CompletedFields / parent1TotalFields) * 100));
 
     // Parent 2 Details Progress
-    let parent2TotalFields = isSoleGuardian === "no" ? 7 : (isSoleGuardian === "yes" ? 1 : 7);
+    const parent2Fields = {
+      name: parent2Name,
+      street: parent2Street,
+      city: parent2City,
+      country: parent2AddressCountry,
+      postal: parent2Postal,
+      phone: parent2Phone,
+      email: parent2Email,
+      state: parent2State,
+      phoneCountry: parent2PhoneCountry,
+      sameAddress: parent2SameAddress
+    };
+    const parent2TotalFields = Object.keys(parent2Fields).length;
     let parent2CompletedFields = 0;
-    if (isSoleGuardian === "no") {
-      if (parent2Name) parent2CompletedFields++;
-      if (parent2SameAddress || parent2Street) parent2CompletedFields++;
-      if (parent2SameAddress || parent2City) parent2CompletedFields++;
-      if (parent2SameAddress || parent2AddressCountry) parent2CompletedFields++;
-      if (parent2SameAddress || parent2Postal) parent2CompletedFields++;
-      if (parent2Phone) parent2CompletedFields++;
-      if (parent2Email) parent2CompletedFields++;
-    } else if (isSoleGuardian === "yes") {
-      parent2CompletedFields = 1;
+    for (const field in parent2Fields) {
+      if (parent2Fields[field]) parent2CompletedFields++;
     }
     setParent2Progress(Math.round((parent2CompletedFields / parent2TotalFields) * 100));
 
     // Additional Information Progress
-    let additionalTotalFields = 0;
+    const additionalFields = {
+      hasAllergies,
+      allergiesDetails,
+      hasTreatment,
+      treatmentDetails,
+      hasDietary,
+      dietaryDetails
+    };
+    const additionalTotalFields = Object.keys(additionalFields).length;
     let additionalCompletedFields = 0;
-
-    // Add conditional fields
-    if (hasAllergies) {
-      additionalTotalFields++;
-      if (allergiesDetails) additionalCompletedFields++;
-    }
-    if (hasTreatment) {
-      additionalTotalFields++;
-      if (treatmentDetails) additionalCompletedFields++;
-    }
-    if (hasDietary) {
-      additionalTotalFields++;
-      if (dietaryDetails) additionalCompletedFields++;
+    for (const field in additionalFields) {
+      if (additionalFields[field]) additionalCompletedFields++;
     }
 
     // If no checkboxes are checked, set minimum fields to 1 to avoid division by zero
