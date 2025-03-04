@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowLeft, ArrowRight, Home, User, Settings, LogOut, ChevronRight, ChevronLeft, ChevronDown, Check, ChevronsUpDown, Info, CircleCheckBig } from "lucide-react"
+import { ArrowLeft, ArrowRight, Home, User, Settings, LogOut, ChevronRight, ChevronLeft, ChevronDown, Check, CircleCheckBig } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -32,7 +32,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -44,523 +43,7 @@ import { popoverStyles } from "@/themes/theme-v1"
 import { CountryCombobox } from "@/components/ui/country-combobox"
 import { PhoneCountryCombobox } from "@/components/ui/phone-country-combobox"
 import { StateCombobox } from "@/components/ui/state-combobox"
-
-type State = {
-  value: string;
-  label: string;
-}
-
-type Country = {
-  value: string;
-  label: string;
-  flag: string;
-}
-
-const countries: Country[] = [
-  { value: "us", label: "United States", flag: "/flags/US.svg" },
-  { value: "ca", label: "Canada", flag: "/flags/CA.svg" },
-  { value: "gb", label: "United Kingdom", flag: "/flags/GB.svg" },
-  { value: "fr", label: "France", flag: "/flags/fr.svg" },
-  { value: "de", label: "Germany", flag: "/flags/DE.svg" },
-  { value: "it", label: "Italy", flag: "/flags/IT.svg" },
-  { value: "es", label: "Spain", flag: "/flags/es.svg" },
-  { value: "au", label: "Australia", flag: "/flags/AU.svg" },
-  { value: "nz", label: "New Zealand", flag: "/flags/NZ.svg" },
-  { value: "jp", label: "Japan", flag: "/flags/JP.svg" },
-  { value: "kr", label: "South Korea", flag: "/flags/KR.svg" },
-  { value: "in", label: "India", flag: "/flags/IN.svg" },
-  { value: "br", label: "Brazil", flag: "/flags/BR.svg" },
-  { value: "mx", label: "Mexico", flag: "/flags/MX.svg" },
-  { value: "za", label: "South Africa", flag: "/flags/ZA.svg" },
-  { value: "cn", label: "China", flag: "/flags/CN.svg" },
-  { value: "ru", label: "Russia", flag: "/flags/RU.svg" },
-  { value: "sg", label: "Singapore", flag: "/flags/SG.svg" },
-  { value: "ae", label: "United Arab Emirates", flag: "/flags/AE.svg" },
-  { value: "se", label: "Sweden", flag: "/flags/SE.svg" }
-]
-
-const statesByCountry: Record<string, State[]> = {
-  us: [
-    { value: "al", label: "Alabama" },
-    { value: "ak", label: "Alaska" },
-    { value: "az", label: "Arizona" },
-    { value: "ar", label: "Arkansas" },
-    { value: "ca", label: "California" },
-    { value: "co", label: "Colorado" },
-    { value: "ct", label: "Connecticut" },
-    { value: "de", label: "Delaware" },
-    { value: "fl", label: "Florida" },
-    { value: "ga", label: "Georgia" },
-    { value: "hi", label: "Hawaii" },
-    { value: "id", label: "Idaho" },
-    { value: "il", label: "Illinois" },
-    { value: "in", label: "Indiana" },
-    { value: "ia", label: "Iowa" },
-    { value: "ks", label: "Kansas" },
-    { value: "ky", label: "Kentucky" },
-    { value: "la", label: "Louisiana" },
-    { value: "me", label: "Maine" },
-    { value: "md", label: "Maryland" },
-    { value: "ma", label: "Massachusetts" },
-    { value: "mi", label: "Michigan" },
-    { value: "mn", label: "Minnesota" },
-    { value: "ms", label: "Mississippi" },
-    { value: "mo", label: "Missouri" },
-    { value: "mt", label: "Montana" },
-    { value: "ne", label: "Nebraska" },
-    { value: "nv", label: "Nevada" },
-    { value: "nh", label: "New Hampshire" },
-    { value: "nj", label: "New Jersey" },
-    { value: "nm", label: "New Mexico" },
-    { value: "ny", label: "New York" },
-    { value: "nc", label: "North Carolina" },
-    { value: "nd", label: "North Dakota" },
-    { value: "oh", label: "Ohio" },
-    { value: "ok", label: "Oklahoma" },
-    { value: "or", label: "Oregon" },
-    { value: "pa", label: "Pennsylvania" },
-    { value: "ri", label: "Rhode Island" },
-    { value: "sc", label: "South Carolina" },
-    { value: "sd", label: "South Dakota" },
-    { value: "tn", label: "Tennessee" },
-    { value: "tx", label: "Texas" },
-    { value: "ut", label: "Utah" },
-    { value: "vt", label: "Vermont" },
-    { value: "va", label: "Virginia" },
-    { value: "wa", label: "Washington" },
-    { value: "wv", label: "West Virginia" },
-    { value: "wi", label: "Wisconsin" },
-    { value: "wy", label: "Wyoming" },
-  ],
-  ca: [
-    { value: "ab", label: "Alberta" },
-    { value: "bc", label: "British Columbia" },
-    { value: "mb", label: "Manitoba" },
-    { value: "nb", label: "New Brunswick" },
-    { value: "nl", label: "Newfoundland and Labrador" },
-    { value: "ns", label: "Nova Scotia" },
-    { value: "nt", label: "Northwest Territories" },
-    { value: "nu", label: "Nunavut" },
-    { value: "on", label: "Ontario" },
-    { value: "pe", label: "Prince Edward Island" },
-    { value: "qc", label: "Quebec" },
-    { value: "sk", label: "Saskatchewan" },
-    { value: "yt", label: "Yukon" },
-  ],
-  gb: [
-    { value: "eng", label: "England" },
-    { value: "sco", label: "Scotland" },
-    { value: "wal", label: "Wales" },
-    { value: "nir", label: "Northern Ireland" },
-  ],
-  fr: [
-    { value: "als", label: "Alsace" },
-    { value: "aqu", label: "Aquitaine" },
-    { value: "bfc", label: "Brittany" },
-    { value: "bre", label: "Bretagne" },
-    { value: "cvl", label: "Centre-Val de Loire" },
-    { value: "cor", label: "Corse" },
-    { value: "hdf", label: "Hauts-de-France" },
-    { value: "idf", label: "Île-de-France" },
-    { value: "lrm", label: "Lorraine" },
-    { value: "mrt", label: "Martinique" },
-    { value: "ncr", label: "Nouvelle-Aquitaine" },
-    { value: "norm", label: "Normandy" },
-    { value: "pdl", label: "Pays de la Loire" },
-    { value: "pdc", label: "Picardie" },
-    { value: "pro", label: "Provence-Alpes-Côte d'Azur" },
-    { value: "qcn", label: "Île de France" },
-    { value: "rhone", label: "Rhône-Alpes" },
-  ],
-  de: [
-    { value: "bw", label: "Baden-Württemberg" },
-    { value: "by", label: "Bayern" },
-    { value: "be", label: "Berlin" },
-    { value: "bb", label: "Brandenburg" },
-    { value: "hb", label: "Bremen" },
-    { value: "hh", label: "Hamburg" },
-    { value: "he", label: "Hessen" },
-    { value: "mv", label: "Mecklenburg-Vorpommern" },
-    { value: "ni", label: "Niedersachsen" },
-    { value: "nw", label: "Nordrhein-Westfalen" },
-    { value: "rp", label: "Rheinland-Pfalz" },
-    { value: "sl", label: "Saarland" },
-    { value: "sn", label: "Sachsen" },
-    { value: "st", label: "Sachsen-Anhalt" },
-    { value: "sh", label: "Schleswig-Holstein" },
-    { value: "th", label: "Thüringen" },
-  ],
-  it: [
-    { value: "ab", label: "Abruzzo" },
-    { value: "ba", label: "Basilicata" },
-    { value: "be", label: "Benevento" },
-    { value: "bl", label: "Bologna" },
-    { value: "bn", label: "Bolzano" },
-    { value: "bs", label: "Brescia" },
-    { value: "br", label: "Brindisi" },
-    { value: "ca", label: "Cagliari" },
-    { value: "fi", label: "Firenze" },
-    { value: "ge", label: "Genova" },
-    { value: "go", label: "Gorizia" },
-    { value: "la", label: "La Spezia" },
-    { value: "lc", label: "Lecco" },
-    { value: "lo", label: "Lodi" },
-    { value: "lu", label: "Lucca" },
-    { value: "mn", label: "Mantova" },
-    { value: "ms", label: "Massa" },
-    { value: "mt", label: "Matera" },
-    { value: "na", label: "Napoli" },
-    { value: "no", label: "Novara" },
-    { value: "or", label: "Oristano" },
-    { value: "pa", label: "Palermo" },
-    { value: "pr", label: "Parma" },
-    { value: "pv", label: "Pavia" },
-    { value: "pg", label: "Perugia" },
-    { value: "pu", label: "Pesaro" },
-    { value: "pe", label: "Pescara" },
-    { value: "pn", label: "Pisa" },
-    { value: "po", label: "Prato" },
-    { value: "rg", label: "Ragusa" },
-    { value: "ra", label: "Ravenna" },
-    { value: "rc", label: "Reggio Calabria" },
-    { value: "re", label: "Reggio Emilia" },
-    { value: "ri", label: "Rieti" },
-    { value: "ro", label: "Roma" },
-    { value: "sa", label: "Salerno" },
-    { value: "si", label: "Siena" },
-    { value: "sr", label: "Siracusa" },
-    { value: "so", label: "Sondrio" },
-    { value: "ta", label: "Taranto" },
-    { value: "te", label: "Teramo" },
-    { value: "tr", label: "Trento" },
-    { value: "ts", label: "Trieste" },
-    { value: "tv", label: "Treviso" },
-    { value: "ud", label: "Udine" },
-    { value: "va", label: "Varese" },
-    { value: "ve", label: "Venezia" },
-    { value: "vb", label: "Verbano-Cusio-Ossola" },
-    { value: "vi", label: "Vicenza" },
-    { value: "vr", label: "Verona" },
-  ],
-  es: [
-    { value: "ba", label: "Badajoz" },
-    { value: "ib", label: "Islas Baleares" },
-    { value: "le", label: "León" },
-    { value: "lo", label: "La Rioja" },
-    { value: "ma", label: "Málaga" },
-    { value: "mu", label: "Murcia" },
-    { value: "na", label: "Navarra" },
-    { value: "ou", label: "Ourense" },
-    { value: "po", label: "Palencia" },
-    { value: "sa", label: "Salamanca" },
-    { value: "se", label: "Segovia" },
-    { value: "so", label: "Soria" },
-    { value: "ta", label: "Tarragona" },
-    { value: "te", label: "Teruel" },
-    { value: "to", label: "Toledo" },
-    { value: "va", label: "Valencia" },
-    { value: "za", label: "Zamora" },
-  ],
-  au: [
-    { value: "ns", label: "New South Wales" },
-    { value: "qld", label: "Queensland" },
-    { value: "sa", label: "South Australia" },
-    { value: "tas", label: "Tasmania" },
-    { value: "vic", label: "Victoria" },
-    { value: "wa", label: "Western Australia" },
-  ],
-  nz: [
-    { value: "auk", label: "Auckland" },
-    { value: "can", label: "Canterbury" },
-    { value: "gis", label: "Gisborne" },
-    { value: "hau", label: "Hawke's Bay" },
-    { value: "man", label: "Manawatu-Wanganui" },
-    { value: "nau", label: "Nelson" },
-    { value: "ntl", label: "Northland" },
-    { value: "ota", label: "Otago" },
-    { value: "stl", label: "Southland" },
-    { value: "tas", label: "Tasman" },
-    { value: "tkl", label: "Taranaki" },
-    { value: "wko", label: "Waikato" },
-    { value: "wgn", label: "Wellington" },
-    { value: "wtc", label: "West Coast" },
-  ],
-  jp: [
-    { value: "ak", label: "Aomori" },
-    { value: "hi", label: "Hiroshima" },
-    { value: "hs", label: "Hokkaido" },
-    { value: "ka", label: "Kanagawa" },
-    { value: "ko", label: "Kochi" },
-    { value: "ky", label: "Kyoto" },
-    { value: "os", label: "Osaka" },
-    { value: "sa", label: "Saitama" },
-    { value: "si", label: "Shiga" },
-    { value: "ta", label: "Tokyo" },
-    { value: "to", label: "Tottori" },
-    { value: "tu", label: "Toyama" },
-    { value: "wu", label: "Wakayama" },
-    { value: "ya", label: "Yamagata" },
-    { value: "yn", label: "Yamanashi" },
-  ],
-  kr: [
-    { value: "cb", label: "Chungcheongbuk-do" },
-    { value: "cb", label: "Chungcheongnam-do" },
-    { value: "gc", label: "Gyeonggi-do" },
-    { value: "gn", label: "Gyeongsangbuk-do" },
-    { value: "gn", label: "Gyeongsangnam-do" },
-    { value: "jb", label: "Jeollabuk-do" },
-    { value: "jb", label: "Jeollanam-do" },
-    { value: "kj", label: "Jeju-do" },
-    { value: "kg", label: "Sejong" },
-    { value: "sl", label: "Seoul" },
-    { value: "ud", label: "Ulsan" },
-  ],
-  in: [
-    { value: "ap", label: "Andhra Pradesh" },
-    { value: "ar", label: "Arunachal Pradesh" },
-    { value: "as", label: "Assam" },
-    { value: "br", label: "Bihar" },
-    { value: "ct", label: "Chhattisgarh" },
-    { value: "ga", label: "Goa" },
-    { value: "gj", label: "Gujarat" },
-    { value: "hr", label: "Haryana" },
-    { value: "hp", label: "Himachal Pradesh" },
-    { value: "jk", label: "Jammu and Kashmir" },
-    { value: "ka", label: "Karnataka" },
-    { value: "kl", label: "Kerala" },
-    { value: "mp", label: "Madhya Pradesh" },
-    { value: "mh", label: "Maharashtra" },
-    { value: "mn", label: "Manipur" },
-    { value: "ml", label: "Meghalaya" },
-    { value: "mz", label: "Mizoram" },
-    { value: "nl", label: "Nagaland" },
-    { value: "or", label: "Odisha" },
-    { value: "pb", label: "Punjab" },
-    { value: "rj", label: "Rajasthan" },
-    { value: "sk", label: "Sikkim" },
-    { value: "tn", label: "Tamil Nadu" },
-    { value: "tg", label: "Telangana" },
-    { value: "tr", label: "Tripura" },
-    { value: "up", label: "Uttar Pradesh" },
-    { value: "ut", label: "Uttarakhand" },
-    { value: "wb", label: "West Bengal" },
-  ],
-  br: [
-    { value: "ac", label: "Acre" },
-    { value: "al", label: "Alagoas" },
-    { value: "am", label: "Amazonas" },
-    { value: "ap", label: "Amapá" },
-    { value: "ba", label: "Bahia" },
-    { value: "ce", label: "Ceará" },
-    { value: "df", label: "Distrito Federal" },
-    { value: "es", label: "Espírito Santo" },
-    { value: "go", label: "Goiás" },
-    { value: "ma", label: "Maranhão" },
-    { value: "mt", label: "Mato Grosso" },
-    { value: "ms", label: "Mato Grosso do Sul" },
-    { value: "mg", label: "Minas Gerais" },
-    { value: "pa", label: "Pará" },
-    { value: "pb", label: "Paraíba" },
-    { value: "pr", label: "Paraná" },
-    { value: "pe", label: "Pernambuco" },
-    { value: "rn", label: "Rio Grande do Norte" },
-    { value: "ro", label: "Rondônia" },
-    { value: "rr", label: "Roraima" },
-    { value: "rs", label: "Rio Grande do Sul" },
-    { value: "sc", label: "Santa Catarina" },
-    { value: "se", label: "Sergipe" },
-    { value: "sp", label: "São Paulo" },
-    { value: "to", label: "Tocantins" },
-  ],
-  mx: [
-    { value: "ags", label: "Aguascalientes" },
-    { value: "bc", label: "Baja California" },
-    { value: "bc", label: "Baja California Sur" },
-    { value: "cam", label: "Campeche" },
-    { value: "coa", label: "Coahuila" },
-    { value: "col", label: "Colima" },
-    { value: "dgo", label: "Durango" },
-    { value: "gua", label: "Guanajuato" },
-    { value: "gro", label: "Guerrero" },
-    { value: "hid", label: "Hidalgo" },
-    { value: "jal", label: "Jalisco" },
-    { value: "mex", label: "México" },
-    { value: "mic", label: "Michoacán" },
-    { value: "mor", label: "Morelos" },
-    { value: "nay", label: "Nayarit" },
-    { value: "nl", label: "Nuevo León" },
-    { value: "oax", label: "Oaxaca" },
-    { value: "pue", label: "Puebla" },
-    { value: "que", label: "Querétaro" },
-    { value: "roo", label: "Quintana Roo" },
-    { value: "san", label: "San Luis Potosí" },
-    { value: "sin", label: "Sinaloa" },
-    { value: "son", label: "Sonora" },
-    { value: "tab", label: "Tabasco" },
-    { value: "tam", label: "Tamaulipas" },
-    { value: "tla", label: "Tlaxcala" },
-    { value: "ver", label: "Veracruz" },
-    { value: "yuc", label: "Yucatán" },
-    { value: "zac", label: "Zacatecas" },
-  ],
-  za: [
-    { value: "ec", label: "Eastern Cape" },
-    { value: "fs", label: "Free State" },
-    { value: "gt", label: "Gauteng" },
-    { value: "kp", label: "KwaZulu-Natal" },
-    { value: "lp", label: "Limpopo" },
-    { value: "mp", label: "Mpumalanga" },
-    { value: "nc", label: "Northern Cape" },
-    { value: "np", label: "North West" },
-    { value: "wc", label: "Western Cape" },
-  ],
-  cn: [
-    { value: "bj", label: "Beijing" },
-    { value: "sh", label: "Shanghai" },
-    { value: "tj", label: "Tianjin" },
-    { value: "cq", label: "Chongqing" },
-    { value: "hk", label: "Hong Kong" },
-    { value: "mo", label: "Macao" },
-    { value: "gd", label: "Guangdong" },
-    { value: "gx", label: "Guangxi" },
-    { value: "gz", label: "Guizhou" },
-    { value: "ha", label: "Hainan" },
-    { value: "hb", label: "Hubei" },
-    { value: "he", label: "Hebei" },
-    { value: "hi", label: "Hunan" },
-    { value: "hl", label: "Heilongjiang" },
-    { value: "hn", label: "Henan" },
-    { value: "jl", label: "Jilin" },
-    { value: "js", label: "Jiangsu" },
-    { value: "jx", label: "Jiangxi" },
-    { value: "ln", label: "Liaoning" },
-    { value: "nm", label: "Neimenggu" },
-    { value: "nx", label: "Ningxia" },
-    { value: "qh", label: "Qinghai" },
-    { value: "sc", label: "Sichuan" },
-    { value: "sd", label: "Shandong" },
-    { value: "sh", label: "Shanghai" },
-    { value: "sn", label: "Shanxi" },
-    { value: "sx", label: "Shanxi" },
-    { value: "tj", label: "Tianjin" },
-    { value: "tw", label: "Taiwan" },
-    { value: "xj", label: "Xinjiang" },
-    { value: "xz", label: "Tibet" },
-    { value: "yn", label: "Yunnan" },
-    { value: "zj", label: "Zhejiang" },
-  ],
-  ru: [
-    { value: "am", label: "Amur" },
-    { value: "ar", label: "Arkhangelsk" },
-    { value: "az", label: "Astrakhan" },
-    { value: "ba", label: "Bashkortostan" },
-    { value: "bu", label: "Buryatia" },
-    { value: "ce", label: "Chelyabinsk" },
-    { value: "da", label: "Dagestan" },
-    { value: "in", label: "Ingushetia" },
-    { value: "ir", label: "Irkutsk" },
-    { value: "iz", label: "Ivanovo" },
-    { value: "ka", label: "Kabardino-Balkaria" },
-    { value: "kb", label: "Kabardino-Balkaria" },
-    { value: "kc", label: "Karachay-Cherkessia" },
-    { value: "kd", label: "Krasnodar" },
-    { value: "ke", label: "Krasnoyarsk" },
-    { value: "ki", label: "Karelia" },
-    { value: "ko", label: "Komi" },
-    { value: "kr", label: "Koryak" },
-    { value: "ks", label: "Kurgan" },
-    { value: "kt", label: "Kurilsk" },
-    { value: "kz", label: "Khabarovsk" },
-    { value: "lg", label: "Leningrad" },
-    { value: "mo", label: "Moscow" },
-    { value: "mz", label: "Mordovia" },
-    { value: "nn", label: "Nenets" },
-    { value: "nv", label: "Novgorod" },
-    { value: "om", label: "Omsk" },
-    { value: "or", label: "Orenburg" },
-    { value: "pe", label: "Penza" },
-    { value: "pr", label: "Primorsky" },
-    { value: "ps", label: "Pskov" },
-    { value: "ro", label: "Rostov" },
-    { value: "ry", label: "Ryazan" },
-    { value: "sa", label: "Sakha" },
-    { value: "se", label: "Samara" },
-    { value: "sk", label: "Saratov" },
-    { value: "sl", label: "Smolensk" },
-    { value: "sn", label: "Stavropol" },
-    { value: "sp", label: "St. Petersburg" },
-    { value: "ta", label: "Tatarstan" },
-    { value: "tg", label: "Taymyr" },
-    { value: "to", label: "Tomsk" },
-    { value: "tu", label: "Tula" },
-    { value: "ty", label: "Tyumen" },
-    { value: "ud", label: "Udmurtia" },
-    { value: "vg", label: "Volgograd" },
-    { value: "vz", label: "Vologda" },
-    { value: "ya", label: "Yamalo-Nenets" },
-    { value: "yh", label: "Yakutia" },
-    { value: "za", label: "Zabaykalsky" },
-  ],
-  sg: [
-    { value: "sg", label: "Singapore" },
-  ],
-  ae: [
-    { value: "du", label: "Dubai" },
-    { value: "sh", label: "Sharjah" },
-    { value: "ab", label: "Abu Dhabi" },
-    { value: "aj", label: "Ajman" },
-    { value: "fr", label: "Fujairah" },
-    { value: "ra", label: "Ras Al Khaimah" },
-    { value: "um", label: "Umm Al Quwain" },
-  ],
-  se: [
-    { value: "ab", label: "Stockholm" },
-    { value: "st", label: "Södermanland" },
-    { value: "up", label: "Uppsala" },
-    { value: "os", label: "Östergötland" },
-    { value: "dl", label: "Dalarna" },
-    { value: "ga", label: "Gävleborg" },
-    { value: "ha", label: "Halland" },
-    { value: "ja", label: "Jämtland" },
-    { value: "na", label: "Jönköping" },
-    { value: "ks", label: "Kalmar" },
-    { value: "bd", label: "Kronoberg" },
-    { value: "nb", label: "Norrbotten" },
-    { value: "sk", label: "Skåne" },
-    { value: "sj", label: "Sörmland" },
-    { value: "s", label: "Stockholm" },
-    { value: "t", label: "Sundsvall" },
-    { value: "y", label: "Örebro" },
-    { value: "c", label: "Östergötland" },
-    { value: "f", label: "Värmland" },
-  ],
-}
-
-function getCountryCallingCode(countryCode: string): string {
-  const callingCodes: { [key: string]: string } = {
-    "us": "1",
-    "ca": "1",
-    "gb": "44",
-    "fr": "33",
-    "de": "49",
-    "it": "39",
-    "es": "34",
-    "au": "61",
-    "nz": "64",
-    "jp": "81",
-    "kr": "82",
-    "in": "91",
-    "br": "55",
-    "mx": "52",
-    "za": "27",
-    "cn": "86",
-    "ru": "7",
-    "sg": "65",
-    "ae": "971",
-    "se": "46"
-  }
-  return callingCodes[countryCode] || "1"
-}
+import { countries, statesByCountry, getCountryCallingCode, type Country, type State } from "@/lib/constants/countries"
 
 function getStatesForCountry(countryCode: string): State[] {
   return statesByCountry[countryCode] || []
@@ -613,10 +96,10 @@ export default function Form() {
 
   // Health information states
   const [hasAllergies, setHasAllergies] = useState<boolean | undefined>(undefined);
-  const [hasTreatment, setHasTreatment] = useState<boolean | undefined>(undefined);
-  const [hasDietary, setHasDietary] = useState<boolean | undefined>(undefined);
   const [allergiesDetails, setAllergiesDetails] = useState("");
+  const [hasTreatment, setHasTreatment] = useState<boolean | undefined>(undefined);
   const [treatmentDetails, setTreatmentDetails] = useState("");
+  const [hasDietary, setHasDietary] = useState<boolean | undefined>(undefined);
   const [dietaryDetails, setDietaryDetails] = useState("");
 
   // Active section state
@@ -629,9 +112,25 @@ export default function Form() {
   // Navigation functions
   const sections = ['student-details', 'parent1-details', 'parent2-details', 'additional-info']
   
-  // Easing function
+  /**
+   * Easing function for smooth scrolling animation
+   * Creates a quadratic ease-out effect for natural deceleration
+   * @param t - Progress of animation from 0 to 1
+   * @returns Eased value between 0 and 1
+   * Can be replaced with other easing functions from libraries like gsap for different effects
+   */
   const easeOutQuad = (t: number): number => t * (2 - t)
   
+  /**
+   * Smoothly scrolls the form section container to a target position
+   * Uses requestAnimationFrame for smooth animation
+   * @param targetPosition - The target scroll position in pixels
+   * 
+   * To reuse this function in other components:
+   * 1. Ensure you have a container with overflow-y: auto
+   * 2. Pass the desired scroll position
+   * 3. Adjust SCROLL_DURATION_MS based on your needs
+   */
   const smoothScrollTo = (targetPosition: number) => {
     const startPosition = window.pageYOffset
     const distance = targetPosition - startPosition
@@ -655,6 +154,17 @@ export default function Form() {
     window.requestAnimationFrame(step)
   }
 
+  /**
+   * Handles navigation to the next form section
+   * - Updates active section
+   * - Calculates progress
+   * - Smoothly scrolls to the next section
+   * 
+   * To adapt this for other forms:
+   * 1. Update sectionOrder array with your section IDs
+   * 2. Modify progress calculation based on your sections
+   * 3. Adjust scroll behavior if needed
+   */
   const goToNextSection = () => {
     const currentIndex = sections.indexOf(activeSection)
     if (currentIndex < sections.length - 1) {
@@ -672,6 +182,12 @@ export default function Form() {
     }
   }
 
+  /**
+   * Handles navigation to the previous form section
+   * Similar to goToNextSection but in reverse
+   * 
+   * Reuse guidelines same as goToNextSection
+   */
   const goToPreviousSection = () => {
     const currentIndex = sections.indexOf(activeSection)
     if (currentIndex > 0) {
@@ -691,78 +207,75 @@ export default function Form() {
 
   // Calculate form progress
   useEffect(() => {
-    // Student Details Progress
+    // Student Details Progress - Each field contributes equally to section progress
     const studentFields = [
-      studentName,
-      studentStreet,
-      studentCity,
-      studentAddressCountry,
-      studentPostal,
-      studentPhone,
-      studentEmail,
-      studentState,
-      studentPhoneCountry
+      studentName,           // Required: Student name
+      studentStreet,         // Required: Street address
+      studentCity,           // Required: City
+      studentAddressCountry, // Required: Country
+      studentPostal,         // Required: Postal code
+      studentPhone,          // Required: Phone number
+      studentEmail,          // Required: Email
+      studentState,          // Required: State
+      studentPhoneCountry    // Required: Phone country code
     ];
     const studentTotalFields = studentFields.length;
     const studentCompletedFields = studentFields.filter(Boolean).length;
     setStudentProgress(Math.round((studentCompletedFields / studentTotalFields) * 100));
 
-    // Parent 1 Details Progress
+    // Parent 1 Details Progress - Fields adapt based on sameAddress and isSoleGuardian
     const parent1Fields = [
-      parent1Name,
-      parent1SameAddress || parent1Street,
-      parent1SameAddress || parent1City,
-      parent1SameAddress || parent1AddressCountry,
-      parent1SameAddress || parent1Postal,
-      parent1Phone,
-      parent1Email,
-      parent1State,
-      parent1PhoneCountry,
-      isSoleGuardian,
-      isSoleGuardian === "yes" ? guardianshipDocument?.name : true
+      parent1Name,                                           // Required: Parent name
+      parent1SameAddress || parent1Street,                  // Required: Either same as student or new street
+      parent1SameAddress || parent1City,                    // Required: Either same as student or new city
+      parent1SameAddress || parent1AddressCountry,          // Required: Either same as student or new country
+      parent1SameAddress || parent1Postal,                  // Required: Either same as student or new postal
+      parent1Phone,                                         // Required: Phone number
+      parent1Email,                                         // Required: Email
+      parent1State,                                         // Required: State
+      parent1PhoneCountry,                                  // Required: Phone country code
+      isSoleGuardian,                                      // Required: Must specify if sole guardian
+      isSoleGuardian === "yes" ? guardianshipDocument?.name : true  // Required only if sole guardian
     ];
     const parent1TotalFields = parent1Fields.length;
     const parent1CompletedFields = parent1Fields.filter(Boolean).length;
     setParent1Progress(Math.round((parent1CompletedFields / parent1TotalFields) * 100));
 
-    // Parent 2 Details Progress
+    // Parent 2 Details Progress - Section skipped if Parent 1 is sole guardian
     const parent2Fields = isSoleGuardian === "yes" ? [true] : [
-      parent2Name,
-      parent2SameAddress || parent2Street,
-      parent2SameAddress || parent2City,
-      parent2SameAddress || parent2AddressCountry,
-      parent2SameAddress || parent2Postal,
-      parent2Phone,
-      parent2Email,
-      parent2State,
-      parent2PhoneCountry
+      parent2Name,                                          // Required if not sole guardian: Parent name
+      parent2SameAddress || parent2Street,                  // Required if not sole guardian: Either same as student or new street
+      parent2SameAddress || parent2City,                    // Required if not sole guardian: Either same as student or new city
+      parent2SameAddress || parent2AddressCountry,          // Required if not sole guardian: Either same as student or new country
+      parent2SameAddress || parent2Postal,                  // Required if not sole guardian: Either same as student or new postal
+      parent2Phone,                                         // Required if not sole guardian: Phone number
+      parent2Email,                                         // Required if not sole guardian: Email
+      parent2State,                                         // Required if not sole guardian: State
+      parent2PhoneCountry                                   // Required if not sole guardian: Phone country code
     ];
     const parent2TotalFields = parent2Fields.length;
     const parent2CompletedFields = parent2Fields.filter(Boolean).length;
     setParent2Progress(Math.round((parent2CompletedFields / parent2TotalFields) * 100));
 
-    // Additional Information Progress
+    // Additional Information Progress - Only health questions are mandatory
     let additionalCompletedFields = 0;
-    let totalFieldsCount = 0;
+    let totalFieldsCount = 3; // Three mandatory health questions
 
-    if (hasAllergies) {
-      totalFieldsCount++;
-      if (allergiesDetails) additionalCompletedFields++;
-    }
-    if (hasTreatment) {
-      totalFieldsCount++;
-      if (treatmentDetails) additionalCompletedFields++;
-    }
-    if (hasDietary) {
-      totalFieldsCount++;
-      if (dietaryDetails) additionalCompletedFields++;
-    }
+    // Check health-related fields (mandatory questions)
+    if (hasAllergies !== undefined) additionalCompletedFields++;     // Required: Must answer allergies question
+    if (hasTreatment !== undefined) additionalCompletedFields++;     // Required: Must answer treatment question
+    if (hasDietary !== undefined) additionalCompletedFields++;       // Required: Must answer dietary question
 
-    // Use at least 1 for total fields to avoid division by zero
-    const additionalTotalFields = Math.max(1, totalFieldsCount);
+    // Optional details fields don't count towards progress
+    if (hasAllergies && allergiesDetails) additionalCompletedFields++;     // Optional: Details only if has allergies
+    if (hasTreatment && treatmentDetails) additionalCompletedFields++;     // Optional: Details only if has treatment
+    if (hasDietary && dietaryDetails) additionalCompletedFields++;         // Optional: Details only if has dietary requirements
+
+    // Calculate additional info progress based on mandatory fields only
+    const additionalTotalFields = totalFieldsCount;
     setAdditionalProgress(Math.round((additionalCompletedFields / additionalTotalFields) * 100));
 
-    // Overall form progress
+    // Overall form progress - Combines all sections
     const totalFields = studentTotalFields + parent1TotalFields + parent2TotalFields + additionalTotalFields;
     const completedFields = studentCompletedFields + parent1CompletedFields + parent2CompletedFields + additionalCompletedFields;
     const progress = Math.round((completedFields / totalFields) * 100);
@@ -789,7 +302,16 @@ export default function Form() {
     allergiesDetails, treatmentDetails, dietaryDetails
   ]);
 
-  // Function to handle field focus
+  /**
+   * Handles field focus events
+   * Automatically scrolls to and activates the section containing the focused field
+   * @param sectionId - ID of the section containing the focused field
+   * 
+   * To reuse in other forms:
+   * 1. Add data-section-id attributes to your form sections
+   * 2. Call this function on field focus events
+   * 3. Update section activation logic if needed
+   */
   const handleFieldFocus = (sectionId: string) => {
     setActiveSection(sectionId)
   }
@@ -1137,7 +659,7 @@ export default function Form() {
                               phoneCountry: parent2PhoneCountry,
                               sameAddress: parent2SameAddress
                             },
-                            additionalInfo: {
+                            healthInfo: {
                               hasAllergies,
                               allergiesDetails,
                               hasTreatment,
@@ -1273,12 +795,17 @@ export default function Form() {
 
         {/* Page Content */}
         <div className="p-6 mt-[98px]">
+          {/* Info Alert for Required Fields */}
+          <Alert variant="info" className="mb-6">
+            All fields are mandatory unless marked as (optional).
+          </Alert>
+
           <Card id="student-details" className="p-6 mb-6">
             <h1 className="text-h4 text-[#141414] mb-8">Student Details</h1>
             
             <form className="space-y-8">
               {/* Student Name */}
-              <div className="w-1/3">
+              <div className="w-[calc(33.333%-10.667px)]">
                 <Input
                   label="Student name"
                   placeholder="Enter student name"
@@ -1290,32 +817,54 @@ export default function Form() {
 
               {/* Student Address */}
               <div className="space-y-4">
-                <div className="flex items-center gap-1">
+                <div>
                   <label className="text-[#141414] text-base">Student Address</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
                 
-                <div className="w-1/3">
-                <Input
-                  placeholder="Enter street address"
-                  label="Street Address"
+                <div className="w-[calc(33.333%-10.667px)]">
+                  <Input
+                    placeholder="Enter street address"
+                    label="Street Address"
                     value={studentStreet}
                     onChange={(e) => setStudentStreet(e.target.value)}
                     onFocus={() => handleFieldFocus('student-details')}
-                />
+                  />
                 </div>
                 
-                <div className="flex gap-4">
-                  <div className="w-1/3">
-                  <Input
-                    placeholder="Enter city"
-                    label="City"
+                <div className="flex gap-8">
+                  <div className="w-[calc(33.333%-10.667px)]">
+                    <Input
+                      placeholder="Enter city"
+                      label="City"
                       value={studentCity}
                       onChange={(e) => setStudentCity(e.target.value)}
                       onFocus={() => handleFieldFocus('student-details')}
-                  />
+                    />
                   </div>
-                  <div className="w-1/3">
+                  <div className="w-[calc(33.333%-10.667px)]">
+                    <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
+                      State / Region / Province
+                    </label>
+                    <Input
+                      placeholder="Enter state/region/province"
+                      value={studentState}
+                      onChange={(e) => setStudentState(e.target.value)}
+                      onFocus={() => handleFieldFocus('student-details')}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-8">
+                  <div className="w-[calc(33.333%-10.667px)]">
+                    <Input
+                      placeholder="Enter postal/zip code"
+                      label="Postal / Zip Code"
+                      value={studentPostal}
+                      onChange={(e) => setStudentPostal(e.target.value)}
+                      onFocus={() => handleFieldFocus('student-details')}
+                    />
+                  </div>
+                  <div className="w-[calc(33.333%-10.667px)]">
                     <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
                       Country
                     </label>
@@ -1327,40 +876,15 @@ export default function Form() {
                     />
                   </div>
                 </div>
-
-                <div className="flex gap-4">
-                  <div className="w-1/3">
-                  <Input
-                    placeholder="Enter postal/zip code"
-                    label="Postal / Zip Code"
-                      value={studentPostal}
-                      onChange={(e) => setStudentPostal(e.target.value)}
-                      onFocus={() => handleFieldFocus('student-details')}
-                  />
-                  </div>
-                  <div className="w-1/3">
-                    <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                      State / Region / Province
-                    </label>
-                    <StateCombobox
-                      states={getStatesForCountry(studentAddressCountry)}
-                      value={studentState}
-                      onValueChange={(value) => setStudentState(value)}
-                      disabled={!studentAddressCountry}
-                      onFocus={() => handleFieldFocus('student-details')}
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* Student Phone */}
               <div>
-                <div className="flex items-center gap-1 mb-2">
+                <div className="mb-2">
                   <label className="text-[#141414] text-base">Student Phone</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
-                <div className="flex gap-1">
-                  <div className="w-[120px]">
+                <div className="flex w-[calc(33.333%-10.667px)] gap-1">
+                  <div className="w-[120px] shrink-0">
                     <PhoneCountryCombobox
                       countries={countries}
                       value={studentPhoneCountry}
@@ -1369,20 +893,21 @@ export default function Form() {
                       getCountryCallingCode={getCountryCallingCode}
                     />
                   </div>
-                  <Input
-                    placeholder="Enter phone number"
-                    value={studentPhone}
-                    onChange={(e) => setStudentPhone(e.target.value)}
-                    onFocus={() => handleFieldFocus('student-details')}
-                  />
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Enter phone number"
+                      value={studentPhone}
+                      onChange={(e) => setStudentPhone(e.target.value)}
+                      onFocus={() => handleFieldFocus('student-details')}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Student Email */}
-              <div className="w-1/3">
-                <div className="flex items-center gap-1">
+              <div className="w-[calc(33.333%-10.667px)]">
+                <div>
                   <label className="text-[#141414] text-base">Student Email</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
                 <Input
                   type="email"
@@ -1400,7 +925,7 @@ export default function Form() {
             
             <form className="space-y-8">
               {/* Parent1 Name */}
-              <div className="w-1/3">
+              <div className="w-[calc(33.333%-10.667px)]">
                 <Input
                   label="Parent / Guardian 1 name"
                   placeholder="Enter parent name"
@@ -1412,12 +937,11 @@ export default function Form() {
 
               {/* Parent1 Address */}
               <div className="space-y-4">
-                <div className="flex items-center gap-1">
+                <div>
                   <label className="text-[#141414] text-base">Parent / Guardian 1 Address</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
 
-                          <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Checkbox
                     id="parent1SameAddress"
                     checked={parent1SameAddress}
@@ -1433,7 +957,7 @@ export default function Form() {
                 
                 {!parent1SameAddress && (
                   <>
-                    <div className="w-1/3">
+                    <div className="w-[calc(33.333%-10.667px)]">
                       <Input
                         placeholder="Enter street address"
                         label="Street Address"
@@ -1443,8 +967,8 @@ export default function Form() {
                       />
                     </div>
                     
-                    <div className="flex gap-4">
-                      <div className="w-1/3">
+                    <div className="flex gap-8">
+                      <div className="w-[calc(33.333%-10.667px)]">
                         <Input
                           placeholder="Enter city"
                           label="City"
@@ -1453,21 +977,21 @@ export default function Form() {
                           onFocus={() => handleFieldFocus('parent1-details')}
                         />
                       </div>
-                      <div className="w-1/3">
-                    <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                      Country
-                    </label>
-                        <CountryCombobox
-                          countries={countries}
-                          value={parent1AddressCountry}
-                          onValueChange={setParent1AddressCountry}
+                      <div className="w-[calc(33.333%-10.667px)]">
+                        <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
+                          State / Region / Province
+                        </label>
+                        <Input
+                          placeholder="Enter state/region/province"
+                          value={parent1State}
+                          onChange={(e) => setParent1State(e.target.value)}
                           onFocus={() => handleFieldFocus('parent1-details')}
                         />
-                  </div>
-                </div>
+                      </div>
+                    </div>
 
-                    <div className="flex gap-4">
-                      <div className="w-1/3">
+                    <div className="flex gap-8">
+                      <div className="w-[calc(33.333%-10.667px)]">
                         <Input
                           placeholder="Enter postal/zip code"
                           label="Postal / Zip Code"
@@ -1476,31 +1000,29 @@ export default function Form() {
                           onFocus={() => handleFieldFocus('parent1-details')}
                         />
                       </div>
-                      <div className="w-1/3">
+                      <div className="w-[calc(33.333%-10.667px)]">
                         <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                          State / Region / Province
+                          Country
                         </label>
-                        <StateCombobox
-                          states={getStatesForCountry(parent1AddressCountry)}
-                          value={parent1State}
-                          onValueChange={(value) => setParent1State(value)}
-                          disabled={!parent1AddressCountry}
+                        <CountryCombobox
+                          countries={countries}
+                          value={parent1AddressCountry}
+                          onValueChange={setParent1AddressCountry}
                           onFocus={() => handleFieldFocus('parent1-details')}
                         />
                       </div>
                     </div>
                   </>
-                            )}
-                          </div>
+                )}
+              </div>
 
               {/* Parent1 Phone */}
               <div>
-                <div className="flex items-center gap-1 mb-2">
+                <div className="mb-2">
                   <label className="text-[#141414] text-base">Parent/Guardian 1 Phone</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
-                <div className="flex gap-1">
-                  <div className="w-[120px]">
+                <div className="flex w-[calc(33.333%-10.667px)] gap-1">
+                  <div className="w-[120px] shrink-0">
                     <PhoneCountryCombobox
                       countries={countries}
                       value={parent1PhoneCountry}
@@ -1509,20 +1031,21 @@ export default function Form() {
                       getCountryCallingCode={getCountryCallingCode}
                     />
                   </div>
-                  <Input
-                    placeholder="Enter phone number"
-                    value={parent1Phone}
-                    onChange={(e) => setParent1Phone(e.target.value)}
-                    onFocus={() => handleFieldFocus('parent1-details')}
-                  />
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Enter phone number"
+                      value={parent1Phone}
+                      onChange={(e) => setParent1Phone(e.target.value)}
+                      onFocus={() => handleFieldFocus('parent1-details')}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Parent1 Email */}
-              <div className="w-1/3">
-                <div className="flex items-center gap-1">
+              <div className="w-[calc(33.333%-10.667px)]">
+                <div>
                   <label className="text-[#141414] text-base">Parent / Guardian 1 Email</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
                 <Input
                   type="email"
@@ -1535,9 +1058,8 @@ export default function Form() {
 
               {/* Sole Guardian Radio Group */}
               <div className="space-y-4">
-                <div className="flex items-center gap-1">
+                <div>
                   <label className="text-[#141414] text-base">Are you the single legal guardian of this student?</label>
-                  <span className="text-[#D32F2F]">*</span>
                 </div>
                 <RadioGroup
                   value={isSoleGuardian || ""}
@@ -1560,11 +1082,13 @@ export default function Form() {
               {/* Conditional File Upload */}
               {isSoleGuardian === "yes" && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-1">
+                  <div>
                     <label className="text-[#141414] text-base">Please submit a document that proves you are the single legal guardian</label>
-                    <span className="text-[#D32F2F]">*</span>
                   </div>
-                  <div className="w-1/3">
+                  <Alert variant="info" className="mb-2">
+                    It is mandatory to upload this document, however this can be completed at a later stage.
+                  </Alert>
+                  <div className="w-[calc(33.333%-10.667px)]">
                     <div 
                       className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                         isDragging ? 'border-[#2CD5C4] bg-[#E8F4F4]' : 'border-[#DFDFDF]'
@@ -1636,7 +1160,7 @@ export default function Form() {
               ) : (
                 <>
                   {/* Parent2 Name */}
-                  <div className="w-1/3">
+                  <div className="w-[calc(33.333%-10.667px)]">
                     <Input
                       label="Parent / Guardian 2 name"
                       placeholder="Enter parent name"
@@ -1649,9 +1173,8 @@ export default function Form() {
 
                   {/* Parent2 Address */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-1">
+                    <div>
                       <label className="text-[#141414] text-base">Parent / Guardian 2 Address</label>
-                      <span className="text-[#D32F2F]">*</span>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -1671,8 +1194,8 @@ export default function Form() {
                     
                     {!parent2SameAddress && (
                       <>
-                        <div className="w-1/3">
-                  <Input
+                        <div className="w-[calc(33.333%-10.667px)]">
+                          <Input
                             placeholder="Enter street address"
                             label="Street Address"
                             value={parent2Street}
@@ -1682,8 +1205,8 @@ export default function Form() {
                           />
                         </div>
                         
-                        <div className="flex gap-4">
-                          <div className="w-1/3">
+                        <div className="flex gap-8">
+                          <div className="w-[calc(33.333%-10.667px)]">
                             <Input
                               placeholder="Enter city"
                               label="City"
@@ -1693,22 +1216,22 @@ export default function Form() {
                               disabled={isSoleGuardian === "yes"}
                             />
                           </div>
-                          <div className="w-1/3">
+                          <div className="w-[calc(33.333%-10.667px)]">
                             <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                              Country
+                              State / Region / Province
                             </label>
-                            <CountryCombobox
-                              countries={countries}
-                              value={parent2AddressCountry}
-                              onValueChange={setParent2AddressCountry}
+                            <Input
+                              placeholder="Enter state/region/province"
+                              value={parent2State}
+                              onChange={(e) => setParent2State(e.target.value)}
                               onFocus={() => handleFieldFocus('parent2-details')}
                               disabled={isSoleGuardian === "yes"}
-                  />
-                </div>
-              </div>
+                            />
+                          </div>
+                        </div>
 
-                        <div className="flex gap-4">
-                          <div className="w-1/3">
+                        <div className="flex gap-8">
+                          <div className="w-[calc(33.333%-10.667px)]">
                             <Input
                               placeholder="Enter postal/zip code"
                               label="Postal / Zip Code"
@@ -1718,31 +1241,30 @@ export default function Form() {
                               disabled={isSoleGuardian === "yes"}
                             />
                           </div>
-                          <div className="w-1/3">
+                          <div className="w-[calc(33.333%-10.667px)]">
                             <label className="mb-[4px] font-sans text-[0.875rem] font-normal leading-normal tracking-[0.00938rem] [font-feature-settings:'liga'_off,'clig'_off] text-[#4E4E4E] block">
-                              State / Region / Province
+                              Country
                             </label>
-                            <StateCombobox
-                              states={getStatesForCountry(parent2AddressCountry)}
-                              value={parent2State}
-                              onValueChange={(value) => setParent2State(value)}
-                              disabled={!parent2AddressCountry || isSoleGuardian === "yes"}
+                            <CountryCombobox
+                              countries={countries}
+                              value={parent2AddressCountry}
+                              onValueChange={setParent2AddressCountry}
                               onFocus={() => handleFieldFocus('parent2-details')}
+                              disabled={isSoleGuardian === "yes"}
                             />
                           </div>
                         </div>
                       </>
-                            )}
-                          </div>
+                    )}
+                  </div>
 
                   {/* Parent2 Phone */}
-              <div>
-                    <div className="flex items-center gap-1 mb-2">
+                  <div>
+                    <div className="mb-2">
                       <label className="text-[#141414] text-base">Parent/Guardian 2 Phone</label>
-                      <span className="text-[#D32F2F]">*</span>
                     </div>
-                    <div className="flex gap-1">
-                      <div className="w-[120px]">
+                    <div className="flex w-[calc(33.333%-10.667px)] gap-1">
+                      <div className="w-[120px] shrink-0">
                         <PhoneCountryCombobox
                           countries={countries}
                           value={parent2PhoneCountry}
@@ -1752,169 +1274,138 @@ export default function Form() {
                           getCountryCallingCode={getCountryCallingCode}
                         />
                       </div>
-                      <Input
-                        placeholder="Enter phone number"
-                        value={parent2Phone}
-                        onChange={(e) => setParent2Phone(e.target.value)}
-                        onFocus={() => handleFieldFocus('parent2-details')}
-                        disabled={isSoleGuardian === "yes"}
-                      />
+                      <div className="flex-1">
+                        <Input
+                          placeholder="Enter phone number"
+                          value={parent2Phone}
+                          onChange={(e) => setParent2Phone(e.target.value)}
+                          onFocus={() => handleFieldFocus('parent2-details')}
+                          disabled={isSoleGuardian === "yes"}
+                        />
+                      </div>
                     </div>
                   </div>
 
                   {/* Parent2 Email */}
-                  <div className="w-1/3">
-                <div className="flex items-center gap-1">
+                  <div className="w-[calc(33.333%-10.667px)]">
+                    <div>
                       <label className="text-[#141414] text-base">Parent / Guardian 2 Email</label>
-                  <span className="text-[#D32F2F]">*</span>
-                </div>
-                <Input
-                  type="email"
-                  placeholder="Enter email address"
+                    </div>
+                    <Input
+                      type="email"
+                      placeholder="Enter email address"
                       value={parent2Email}
                       onChange={(e) => setParent2Email(e.target.value)}
                       onFocus={() => handleFieldFocus('parent2-details')}
                       disabled={isSoleGuardian === "yes"}
-                />
-              </div>
+                    />
+                  </div>
                 </>
               )}
             </form>
           </Card>
 
-          <Card id="additional-info" className="p-6">
+          <Card id="additional-info" className="p-6 mt-6">
             <h1 className="text-h4 text-[#141414] mb-8">Additional Information</h1>
             <form className="space-y-8">
               {/* Current School */}
-              <div className="w-1/3">
+              <div className="w-[calc(33.333%-10.667px)]">
+                <div>
+                  <label className="text-[#141414] text-base">Current School <span className="text-sm text-[#667085]">(optional)</span></label>
+                </div>
                 <Input
-                  label="Current School"
                   placeholder="Enter current school"
                   onFocus={() => handleFieldFocus('additional-info')}
                 />
               </div>
 
               {/* Health Information Section */}
-              <div>
-                <h2 className="text-[#141414] text-base mb-4">Can you also confirm if the student has any of the following?</h2>
-                
-                {/* Allergies */}
-                <div className="space-y-4 mb-6">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-1">
-                      <label className="text-[#141414] text-base">Allergies?</label>
-                      <span className="text-[#D32F2F]">*</span>
+              <div className="space-y-6">
+                <div>
+                  <label className="mb-2 block text-[#4E4E4E]">
+                    Does the student have any allergies?
+                  </label>
+                  <RadioGroup
+                    value={hasAllergies === undefined ? "" : hasAllergies ? "yes" : "no"}
+                    onValueChange={(value) => setHasAllergies(value === "yes")}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="allergies-no" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="allergies-no">No</label>
                     </div>
-                    <RadioGroup
-                      value={hasAllergies === true ? "yes" : hasAllergies === false ? "no" : undefined}
-                      onValueChange={(value) => {
-                        setHasAllergies(value === "yes");
-                        if (value === "no") setAllergiesDetails("");
-                      }}
-                    >
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="allergies-no" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="allergies-no">No</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="allergies-yes" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="allergies-yes">Yes</label>
-                        </div>
-                        {hasAllergies && (
-                          <div className="flex-1 max-w-xs">
-                            <Input
-                              placeholder="Please explain"
-                              value={allergiesDetails}
-                              onChange={(e) => setAllergiesDetails(e.target.value)}
-                              onFocus={() => handleFieldFocus('additional-info')}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </RadioGroup>
-                  </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="allergies-yes" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="allergies-yes">Yes</label>
+                    </div>
+                  </RadioGroup>
+                  {hasAllergies && (
+                    <textarea
+                      placeholder="Please provide details about allergies (optional)"
+                      value={allergiesDetails}
+                      onChange={(e) => setAllergiesDetails(e.target.value)}
+                      onFocus={() => handleFieldFocus('additional-info')}
+                      className="mt-4 w-full min-h-[100px] p-3 rounded-md border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#00968F]"
+                    />
+                  )}
                 </div>
 
-                {/* Physical/psychological treatment */}
-                <div className="space-y-4 mb-6">
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <label className="text-[#141414] text-base">Physical/psychological treatment?</label>
-                        <span className="text-[#D32F2F]">*</span>
-                      </div>
-                      <span className="text-sm text-[#667085] block mt-1">
-                        Has the student had anxiety, depression, eating disorder, suicidal thoughts, seen a therapist/psychologist etc. within the last recent years?
-                      </span>
+                <div>
+                  <label className="mb-2 block text-[#4E4E4E]">
+                    Is the student currently receiving any medical treatment?
+                  </label>
+                  <RadioGroup
+                    value={hasTreatment === undefined ? "" : hasTreatment ? "yes" : "no"}
+                    onValueChange={(value) => setHasTreatment(value === "yes")}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="treatment-no" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="treatment-no">No</label>
                     </div>
-                    <RadioGroup
-                      value={hasTreatment === true ? "yes" : hasTreatment === false ? "no" : undefined}
-                      onValueChange={(value) => {
-                        setHasTreatment(value === "yes");
-                        if (value === "no") setTreatmentDetails("");
-                      }}
-                    >
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="treatment-no" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="treatment-no">No</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="treatment-yes" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="treatment-yes">Yes</label>
-                        </div>
-                        {hasTreatment && (
-                          <div className="flex-1 max-w-xs">
-                            <Input
-                              placeholder="Please explain"
-                              value={treatmentDetails}
-                              onChange={(e) => setTreatmentDetails(e.target.value)}
-                              onFocus={() => handleFieldFocus('additional-info')}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </RadioGroup>
-                  </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="treatment-yes" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="treatment-yes">Yes</label>
+                    </div>
+                  </RadioGroup>
+                  {hasTreatment && (
+                    <textarea
+                      placeholder="Please provide details about medical treatment (optional)"
+                      value={treatmentDetails}
+                      onChange={(e) => setTreatmentDetails(e.target.value)}
+                      onFocus={() => handleFieldFocus('additional-info')}
+                      className="mt-4 w-full min-h-[100px] p-3 rounded-md border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#00968F]"
+                    />
+                  )}
                 </div>
 
-                {/* Dietary requirements */}
-                <div className="space-y-4">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-1">
-                      <label className="text-[#141414] text-base">Dietary requirements?</label>
-                      <span className="text-[#D32F2F]">*</span>
+                <div>
+                  <label className="mb-2 block text-[#4E4E4E]">
+                    Does the student have any dietary requirements?
+                  </label>
+                  <RadioGroup
+                    value={hasDietary === undefined ? "" : hasDietary ? "yes" : "no"}
+                    onValueChange={(value) => setHasDietary(value === "yes")}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="dietary-no" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="dietary-no">No</label>
                     </div>
-                    <RadioGroup
-                      value={hasDietary === true ? "yes" : hasDietary === false ? "no" : undefined}
-                      onValueChange={(value) => {
-                        setHasDietary(value === "yes");
-                        if (value === "no") setDietaryDetails("");
-                      }}
-                    >
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="dietary-no" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="dietary-no">No</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="dietary-yes" onFocus={() => handleFieldFocus('additional-info')} />
-                          <label htmlFor="dietary-yes">Yes</label>
-                        </div>
-                        {hasDietary && (
-                          <div className="flex-1 max-w-xs">
-                            <Input
-                              placeholder="Please explain"
-                              value={dietaryDetails}
-                              onChange={(e) => setDietaryDetails(e.target.value)}
-                              onFocus={() => handleFieldFocus('additional-info')}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </RadioGroup>
-                  </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="dietary-yes" onFocus={() => handleFieldFocus('additional-info')} />
+                      <label htmlFor="dietary-yes">Yes</label>
+                    </div>
+                  </RadioGroup>
+                  {hasDietary && (
+                    <textarea
+                      placeholder="Please provide details about dietary requirements (optional)"
+                      value={dietaryDetails}
+                      onChange={(e) => setDietaryDetails(e.target.value)}
+                      onFocus={() => handleFieldFocus('additional-info')}
+                      className="mt-4 w-full min-h-[100px] p-3 rounded-md border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#00968F]"
+                    />
+                  )}
                 </div>
               </div>
             </form>

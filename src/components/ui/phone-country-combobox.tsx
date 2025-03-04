@@ -8,12 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { popoverStyles } from "@/themes/theme-v1"
 import Image from "next/image"
-
-interface Country {
-  value: string
-  label: string
-  flag: string
-}
+import { type Country } from "@/lib/constants/countries"
 
 interface PhoneCountryComboboxProps {
   countries: Country[]
