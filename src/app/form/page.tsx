@@ -259,7 +259,7 @@ export default function Form() {
 
     // Additional Information Progress - Only health questions are mandatory
     let additionalCompletedFields = 0;
-    let totalFieldsCount = 3; // Three mandatory health questions
+    const totalFieldsCount = 3; // Three mandatory health questions
 
     // Check health-related fields (mandatory questions)
     if (hasAllergies !== undefined) additionalCompletedFields++;     // Required: Must answer allergies question
