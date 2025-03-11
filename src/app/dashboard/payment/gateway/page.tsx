@@ -2,9 +2,10 @@
 
 import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 
-export default function PaymentGatewayPage() {
+// PaymentForm component that uses useSearchParams
+function PaymentForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const paymentMethod = searchParams.get('method')
@@ -317,5 +318,23 @@ export default function PaymentGatewayPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Loading component
+function PaymentFormLoading() {
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-4 border-[#00968F] border-t-transparent"></div>
+    </div>
+  )
+}
+
+// Main page component
+export default function PaymentGatewayPage() {
+  return (
+    <Suspense fallback={<PaymentFormLoading />}>
+      <PaymentForm />
+    </Suspense>
   )
 } 
