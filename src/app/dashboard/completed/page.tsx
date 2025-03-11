@@ -38,7 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Accordion,
   AccordionContent,
@@ -54,7 +54,17 @@ export default function CompletedDashboard() {
   const { toast } = useToast()
   const [showWelcomeAlert, setShowWelcomeAlert] = useState(true)
   const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+
+  useEffect(() => {
+    if (isPaymentOpen) {
+      const timer = setTimeout(() => {
+        router.push('/dashboard/payment')
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isPaymentOpen, router])
 
   const handleLogout = () => {
     // In a real app, we would clear auth tokens/session here
@@ -208,7 +218,7 @@ export default function CompletedDashboard() {
                       <span className="text-sm text-[#667085]">Make your initial deposit to secure your placement</span>
                     </div>
                   </div>
-                  <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
+                  <Dialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen}>
                     <DialogTrigger asChild>
                       <Button variant="default" size="lg" className="min-w-[160px]">
                         Pay Deposit
@@ -216,76 +226,22 @@ export default function CompletedDashboard() {
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
-                        <DialogTitle>Pay Deposit</DialogTitle>
+                        <DialogTitle>Payment Confirmation</DialogTitle>
                         <DialogDescription>
-                          Make your initial deposit of €400 to secure your placement
+                          You will be redirected to our official payment gateway. Please do not close this window or refresh the page during the process.
                         </DialogDescription>
                       </DialogHeader>
-                      <form onSubmit={handlePayment} className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="amount">Amount</Label>
-                          <div className="relative">
-                            <Input
-                              id="amount"
-                              value="400.00"
-                              disabled
-                              className="pl-6"
-                            />
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">
-                              €
-                            </span>
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="card-number">Card Number</Label>
-                          <div className="relative">
-                            <Input
-                              id="card-number"
-                              placeholder="1234 5678 9012 3456"
-                              required
-                              className="pl-10"
-                              defaultValue="4242 4242 4242 4242"
-                            />
-                            <CreditCard className="absolute left-2 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="expiry">Expiry Date</Label>
-                            <Input
-                              id="expiry"
-                              placeholder="MM/YY"
-                              required
-                              defaultValue="12/25"
-                            />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="cvc">CVC</Label>
-                            <Input
-                              id="cvc"
-                              placeholder="123"
-                              required
-                              defaultValue="123"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="name">Name on Card</Label>
-                          <Input
-                            id="name"
-                            placeholder="John Smith"
-                            required
-                            defaultValue="Bessie Cooper"
-                          />
-                        </div>
+                      <div className="flex justify-end">
                         <Button 
-                          type="submit" 
-                          className="w-full mt-4" 
-                          disabled={isProcessing}
+                          variant="default" 
+                          onClick={() => {
+                            setIsConfirmationOpen(false)
+                            setIsPaymentOpen(true)
+                          }}
                         >
-                          {isProcessing ? "Processing..." : "Pay €400.00"}
+                          Continue to Payment Gateway
                         </Button>
-                      </form>
+                      </div>
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -325,6 +281,23 @@ export default function CompletedDashboard() {
               </Accordion>
             </div>
           </Card>
+
+          <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
+            <DialogContent className="sm:max-w-[425px] [&>button]:hidden" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+              <DialogHeader>
+                <DialogTitle>Pay Deposit</DialogTitle>
+                <DialogDescription>
+                  You will be redirected to our secure payment gateway to complete your €400 deposit payment.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-8 flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-4 border-[#00968F] border-t-transparent"></div>
+                <p className="text-sm text-[#667085] text-center">
+                  Please wait while we redirect you to our secure payment gateway...
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
     </div>
