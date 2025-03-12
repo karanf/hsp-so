@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { CreditCard, Building2, QrCode } from "lucide-react"
 
 export default function PaymentPage() {
   const router = useRouter()
@@ -53,6 +54,8 @@ export default function PaymentPage() {
                 : 'hover:shadow-md hover:scale-[1.02] hover:bg-[#F8FFFE]'}`}
             onClick={() => setSelectedMethod('CARD')}
           >
+            <CreditCard className={`w-6 h-6 mb-2 transition-colors duration-200 
+              ${selectedMethod === 'CARD' ? 'text-[#00968F]' : 'text-[#141414]'}`} />
             <span className={`font-medium mb-1 transition-colors duration-200 
               ${selectedMethod === 'CARD' ? 'text-[#00968F]' : 'text-[#141414]'}`}>
               CARD
@@ -66,6 +69,8 @@ export default function PaymentPage() {
                 : 'hover:shadow-md hover:scale-[1.02] hover:bg-[#F8FFFE]'}`}
             onClick={() => setSelectedMethod('WECHAT')}
           >
+            <QrCode className={`w-6 h-6 mb-2 transition-colors duration-200 
+              ${selectedMethod === 'WECHAT' ? 'text-[#00968F]' : 'text-[#141414]'}`} />
             <span className={`font-medium mb-1 transition-colors duration-200 
               ${selectedMethod === 'WECHAT' ? 'text-[#00968F]' : 'text-[#141414]'}`}>
               WECHAT
@@ -79,6 +84,8 @@ export default function PaymentPage() {
                 : 'hover:shadow-md hover:scale-[1.02] hover:bg-[#F8FFFE]'}`}
             onClick={() => setSelectedMethod('ALIPAY')}
           >
+            <QrCode className={`w-6 h-6 mb-2 transition-colors duration-200 
+              ${selectedMethod === 'ALIPAY' ? 'text-[#00968F]' : 'text-[#141414]'}`} />
             <span className={`font-medium mb-1 transition-colors duration-200 
               ${selectedMethod === 'ALIPAY' ? 'text-[#00968F]' : 'text-[#141414]'}`}>
               ALIPAY
@@ -92,6 +99,8 @@ export default function PaymentPage() {
                 : 'hover:shadow-md hover:scale-[1.02] hover:bg-[#F8FFFE]'}`}
             onClick={() => setSelectedMethod('BANK')}
           >
+            <Building2 className={`w-6 h-6 mb-2 transition-colors duration-200 
+              ${selectedMethod === 'BANK' ? 'text-[#00968F]' : 'text-[#141414]'}`} />
             <span className={`font-medium mb-1 transition-colors duration-200 
               ${selectedMethod === 'BANK' ? 'text-[#00968F]' : 'text-[#141414]'}`}>
               BANK TRANSFER

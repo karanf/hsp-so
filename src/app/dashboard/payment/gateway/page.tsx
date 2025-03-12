@@ -3,6 +3,13 @@
 import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
+import { Clock } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { SlidingNumber } from "@/components/ui/sliding-number"
 
 // PaymentForm component that uses useSearchParams
 function PaymentForm() {
@@ -162,50 +169,47 @@ function PaymentForm() {
             </div>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm mb-1">Cardholder Name</label>
-                <input
-                  type="text"
+              <div className="space-y-1.5">
+                <Label htmlFor="cardholderName">Cardholder Name</Label>
+                <Input
+                  id="cardholderName"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Smith"
-                  className="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#00968F] focus:border-[#00968F]"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm mb-1">Card Number</label>
-                <input
-                  type="text"
+              <div className="space-y-1.5">
+                <Label htmlFor="cardNumber">Card Number</Label>
+                <Input
+                  id="cardNumber"
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
                   placeholder="1234 5678 9012 3456"
-                  className="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#00968F] focus:border-[#00968F]"
                   maxLength={19}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm mb-1">Expiry Date</label>
-                  <input
-                    type="text"
+                <div className="space-y-1.5">
+                  <Label htmlFor="expiryDate">Expiry Date</Label>
+                  <Input
+                    id="expiryDate"
                     value={expiryDate}
                     onChange={(e) => setExpiryDate(e.target.value)}
                     placeholder="MM/YY"
-                    className="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#00968F] focus:border-[#00968F]"
                     maxLength={5}
                   />
                 </div>
-                <div>
-                  <label className="block text-sm mb-1">CVV</label>
-                  <input
-                    type="text"
+                <div className="space-y-1.5">
+                  <Label htmlFor="cvv">CVV</Label>
+                  <Input
+                    id="cvv"
                     value={cvv}
                     onChange={(e) => setCvv(e.target.value)}
                     placeholder="123"
-                    className="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#00968F] focus:border-[#00968F]"
                     maxLength={3}
+                    type="password"
                   />
                 </div>
               </div>
@@ -273,13 +277,21 @@ function PaymentForm() {
         {/* Right side - Payment form */}
         <div className="w-[55%] p-8">
           <div className="max-w-[600px] mx-auto">
-            <div className="flex justify-between items-center mb-8">
+            <div className="mb-8">
               <h1 className="text-xl font-medium">
                 {paymentMethod === 'CARD' ? 'ENTER CARD DETAILS' :
                  paymentMethod === 'BANK' ? 'BANK TRANSFER DETAILS' :
                  `SCAN ${paymentMethod === 'WECHAT' ? 'WECHAT' : 'ALIPAY'} QR CODE`}
               </h1>
-              <div className="text-red-500 font-medium">{formatTime(timeLeft)}</div>
+              <Alert variant="info" icon={Clock} className="mt-4">
+                <AlertDescription>
+                  You have <span className="font-bold font-mono inline-flex items-center">
+                    <SlidingNumber value={Math.floor(timeLeft / 60)} padStart={true} />
+                    <span className="mx-[1px]">:</span>
+                    <SlidingNumber value={timeLeft % 60} padStart={true} />
+                  </span> minutes to complete the payment. After this time, the link will have expired and you will need to initiate another payment from your portal dashboard.
+                </AlertDescription>
+              </Alert>
             </div>
 
             {paymentMethod === 'CARD' && (
@@ -293,26 +305,25 @@ function PaymentForm() {
               {renderPaymentForm()}
 
               {paymentMethod === 'CARD' && (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
                     id="payInCurrency"
                     checked={payInLocalCurrency}
-                    onChange={(e) => setPayInLocalCurrency(e.target.checked)}
-                    className="rounded border-gray-300 text-[#00968F] focus:ring-[#00968F]"
+                    onCheckedChange={(checked) => setPayInLocalCurrency(checked as boolean)}
                   />
-                  <label htmlFor="payInCurrency" className="text-sm">Pay in my currency</label>
+                  <Label htmlFor="payInCurrency" className="text-sm font-normal">Pay in my currency</Label>
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="w-full bg-[#00BFB3] text-white font-medium py-3 rounded hover:bg-[#00a89d] transition-colors"
+              <Button 
+                type="submit" 
+                className="w-full"
+                size="lg"
               >
                 {paymentMethod === 'CARD' ? `Pay ${value} ${currency}` :
                  paymentMethod === 'BANK' ? 'I have completed the bank transfer' :
                  'Check payment status'}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

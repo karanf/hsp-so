@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Info, AlertCircle, CheckCircle2, AlertTriangle } from "lucide-react"
+import { Info, AlertCircle, CheckCircle2, AlertTriangle, LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -21,30 +21,34 @@ const alertVariants = cva(
   }
 )
 
-const Alert = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant = "info", ...props }, ref) => {
-  const icons = {
-    info: Info,
-    warning: AlertTriangle,
-    error: AlertCircle,
-    success: CheckCircle2,
-  }
-  
-  const IconComponent = icons[variant as keyof typeof icons] || Info
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
+  VariantProps<typeof alertVariants> {
+  icon?: LucideIcon
+}
 
-  return (
-    <div
-      ref={ref}
-      role="alert"
-      className={cn(alertVariants({ variant }), className)}
-    >
-      <IconComponent className="h-5 w-5 mt-[2px]" />
-      <div className="w-full">{props.children}</div>
-    </div>
-  )
-})
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
+  ({ className, variant = "info", icon, ...props }, ref) => {
+    const icons = {
+      info: Info,
+      warning: AlertTriangle,
+      error: AlertCircle,
+      success: CheckCircle2,
+    }
+    
+    const IconComponent = icon || icons[variant as keyof typeof icons] || Info
+
+    return (
+      <div
+        ref={ref}
+        role="alert"
+        className={cn(alertVariants({ variant }), className)}
+      >
+        <IconComponent className="h-5 w-5 mt-[2px]" />
+        <div className="w-full">{props.children}</div>
+      </div>
+    )
+  }
+)
 Alert.displayName = "Alert"
 
 const AlertTitle = React.forwardRef<
