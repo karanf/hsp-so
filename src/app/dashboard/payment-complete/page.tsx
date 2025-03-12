@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronDown, Home, User, Settings, LogOut, SquareCheck, FileCheck, X, CircleCheck, CreditCard, Euro, ListChecks } from "lucide-react"
+import { ChevronDown, Home, User, Settings, LogOut, SquareCheck, FileCheck, X, CircleCheck, CreditCard, ListChecks } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -78,30 +78,6 @@ export default function PaymentCompleteDashboard() {
     setIsPaymentOpen(false)
   }
 
-  // Generate payment schedule for next 12 months
-  const generatePaymentSchedule = () => {
-    const schedule = []
-    const startDate = new Date()
-    const monthlyAmount = 1200 // €1,200 per month
-
-    for (let i = 0; i < 12; i++) {
-      const paymentDate = new Date(startDate)
-      paymentDate.setMonth(paymentDate.getMonth() + i + 1)
-      schedule.push({
-        id: i + 1,
-        dueDate: paymentDate.toLocaleDateString('en-GB', { 
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }),
-        amount: monthlyAmount
-      })
-    }
-    return schedule
-  }
-
-  const paymentSchedule = generatePaymentSchedule()
-
   return (
     <div className="min-h-screen flex bg-[#FCFCFC]">
       {/* Left Sidebar */}
@@ -124,11 +100,6 @@ export default function PaymentCompleteDashboard() {
             <div className="w-full flex flex-col justify-center items-center self-stretch py-3 px-[1.125rem] border-t border-b border-[#2CD5C4] bg-white hover:bg-[#E8F4F4] hover:text-[#005151] border-x-8 border-x-[#2CD5C4] text-[#005151] cursor-pointer transition-colors">
               <span>Home</span>
             </div>
-            <Link href="/form" className="w-full">
-              <div className="w-full flex flex-col justify-center items-center self-stretch py-3 px-[1.125rem] border-b border-[#2CD5C4] bg-white hover:bg-[#E8F4F4] hover:text-[#005151] focus:border-x-8 focus:border-[#2CD5C4] focus:bg-white cursor-pointer transition-colors">
-                <span>Course Reservation</span>
-              </div>
-            </Link>
           </nav>
         </div>
       </aside>
@@ -226,7 +197,7 @@ export default function PaymentCompleteDashboard() {
                 </AlertDescription>
               </Alert>
               <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <FileCheck className="h-6 w-6 text-[#667085]" />
                     <div className="flex flex-col">
@@ -236,18 +207,6 @@ export default function PaymentCompleteDashboard() {
                   </div>
                   <Button variant="default" size="sm">
                     Review Now
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-6 w-6 text-[#667085]" />
-                    <div className="flex flex-col">
-                      <h3 className="text-h5 text-[#141414]">Set Up Payment Method</h3>
-                      <span className="text-sm text-[#667085]">Add a payment method for future installments</span>
-                    </div>
-                  </div>
-                  <Button variant="default" size="sm">
-                    Set Up
                   </Button>
                 </div>
               </div>
@@ -263,85 +222,22 @@ export default function PaymentCompleteDashboard() {
               </h2>
               <Alert variant="info">
                 <AlertDescription className="text-body2">
-                  Important documents related to your course reservation and payments. Click to download.
+                  Download the documents and complete them to continue your application
                 </AlertDescription>
               </Alert>
               <div className="flex flex-col gap-4">
-                {/* Payment Receipt */}
-                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-6 w-6 text-[#667085]" />
-                    <div className="flex flex-col">
-                      <h3 className="text-h5 text-[#141414]">Payment Receipt</h3>
-                      <span className="text-sm text-[#667085]">Initial deposit payment confirmation</span>
-                    </div>
-                  </div>
-                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
-                    Download PDF
-                  </Button>
-                </div>
-
-                {/* Course Reservation Document */}
-                <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-4">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <FileCheck className="h-6 w-6 text-[#667085]" />
                     <div className="flex flex-col">
-                      <h3 className="text-h5 text-[#141414]">Course Reservation Details</h3>
-                      <span className="text-sm text-[#667085]">Complete course and accommodation information</span>
+                      <h3 className="text-h5 text-[#141414]">All necessary documents</h3>
+                      <span className="text-sm text-[#667085]">All relevant application documentation needed for the program</span>
                     </div>
                   </div>
                   <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
-                    Download PDF
+                    Download
                   </Button>
                 </div>
-
-                {/* Payment Schedule Document */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <ListChecks className="h-6 w-6 text-[#667085]" />
-                    <div className="flex flex-col">
-                      <h3 className="text-h5 text-[#141414]">Payment Schedule</h3>
-                      <span className="text-sm text-[#667085]">Detailed payment timeline and instructions</span>
-                    </div>
-                  </div>
-                  <Button variant="secondary" size="sm" className="text-[#00968F] border-[#00968F] hover:bg-[#E8F4F4]">
-                    Download PDF
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* Payment Schedule Card */}
-          <Card className="p-4 mb-6">
-            <div className="flex flex-col gap-3">
-              <h2 className="text-h4 text-[#141414] flex items-center gap-2">
-                <Euro className="h-6 w-6" />
-                Payment Schedule
-              </h2>
-              <Alert variant="info">
-                <AlertDescription className="text-body2">
-                  Your upcoming payments for the next 12 months. Each payment is due by the specified date.
-                </AlertDescription>
-              </Alert>
-              <div className="flex flex-col gap-4">
-                {paymentSchedule.map((payment) => (
-                  <div key={payment.id} className="flex items-center justify-between border-b border-[#E8E8E8] pb-4 last:border-0">
-                    <div className="flex items-center gap-3">
-                      <Euro className="h-6 w-6 text-[#667085]" />
-                      <div className="flex flex-col">
-                        <h3 className="text-h5 text-[#141414]">Payment {payment.id}</h3>
-                        <span className="text-sm text-[#667085]">Due by {payment.dueDate}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-[#141414] font-medium">€{payment.amount.toLocaleString()}</span>
-                      <Button variant="default" size="sm">
-                        Pay Now
-                      </Button>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </Card>

@@ -109,8 +109,51 @@ export default function Form() {
   const [formProgress, setFormProgress] = useState(0);
   const [isFormComplete, setIsFormComplete] = useState(false);
 
+  // Program and Add-ons states
+  const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+
+  // Program options
+  const programOptions = [
+    {
+      id: "academic-year",
+      name: "Academic Year Program",
+      description: "Full academic year in a chosen country with a host family",
+      price: "$15,000"
+    },
+    {
+      id: "semester",
+      name: "Semester Program",
+      description: "One semester abroad with cultural immersion",
+      price: "$8,500"
+    },
+    {
+      id: "summer",
+      name: "Summer Program",
+      description: "Intensive summer learning experience",
+      price: "$5,000"
+    }
+  ];
+
+  // Add-ons by program
+  const addonsByProgram = {
+    "academic-year": [
+      { id: "language", name: "Language Course", price: "$800" },
+      { id: "sports", name: "Sports Program", price: "$500" },
+      { id: "tutoring", name: "Private Tutoring", price: "$1,200" }
+    ],
+    "semester": [
+      { id: "language", name: "Language Course", price: "$500" },
+      { id: "cultural", name: "Cultural Excursions", price: "$400" }
+    ],
+    "summer": [
+      { id: "activities", name: "Adventure Activities", price: "$300" },
+      { id: "workshops", name: "Creative Workshops", price: "$250" }
+    ]
+  };
+
   // Navigation functions
-  const sections = ['student-details', 'parent1-details', 'parent2-details', 'additional-info']
+  const sections = ['student-details', 'parent1-details', 'parent2-details', 'additional-info', 'program-addons']
   
   /**
    * Easing function for smooth scrolling animation
@@ -429,9 +472,9 @@ export default function Form() {
                         className="transition-all duration-300 ease-out"
                       />
                     </svg>
-              </div>
+                  </div>
                 )}
-            </div>
+              </div>
             </button>
             <button 
               onClick={() => {
@@ -565,6 +608,39 @@ export default function Form() {
                         strokeDasharray={`${2 * Math.PI * 8}`}
                         strokeDashoffset={`${2 * Math.PI * 8 * (1 - additionalProgress / 100)}`}
                         className="transition-all duration-300 ease-out"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </button>
+            <button 
+              onClick={() => {
+                const element = document.getElementById('program-addons')
+                if (element) {
+                  const headerOffset = 122
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                  const offsetPosition = elementPosition - headerOffset
+                  smoothScrollTo(offsetPosition)
+                }
+                setActiveSection('program-addons')
+              }}
+              className={`relative w-full flex flex-col justify-center items-center self-stretch py-3 px-[1.125rem] border-b border-[#2CD5C4] bg-white hover:bg-[#E8F4F4] hover:text-[#005151] ${activeSection === 'program-addons' ? 'shadow-[inset_8px_0_0_0_#2CD5C4,inset_-8px_0_0_0_#2CD5C4] bg-white text-[#005151]' : ''} cursor-pointer transition-colors`}
+            >
+              <span>Program & Add-ons</span>
+              <div className="absolute left-6 top-1/2 -translate-y-1/2">
+                {selectedProgram ? (
+                  <CircleCheckBig className="h-5 w-5 text-[#2CD5C4]" />
+                ) : (
+                  <div className="relative h-5 w-5">
+                    <svg className="h-5 w-5 -rotate-90 transform">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="8"
+                        stroke="#E8E8E8"
+                        strokeWidth="2"
+                        fill="none"
                       />
                     </svg>
                   </div>
@@ -1305,7 +1381,7 @@ export default function Form() {
             </form>
           </Card>
 
-          <Card id="additional-info" className="p-6 mt-6">
+          <Card id="additional-info" className="p-6 mb-6">
             <h1 className="text-h4 text-[#141414] mb-8">Additional Information</h1>
             <form className="space-y-8">
               {/* Current School */}
@@ -1409,6 +1485,132 @@ export default function Form() {
                 </div>
               </div>
             </form>
+          </Card>
+
+          {/* Program & Add-ons Section */}
+          <Card id="program-addons" className="p-6">
+            <h1 className="text-h4 text-[#141414] mb-8">Program & Add-ons</h1>
+            
+            <div className="space-y-8">
+              {/* Program Selection */}
+              <div>
+                <h2 className="text-[#141414] text-lg mb-4">Select Your Program</h2>
+                <div className="grid grid-cols-1 gap-4">
+                  {programOptions.map((program) => (
+                    <div
+                      key={program.id}
+                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                        selectedProgram === program.id
+                          ? 'border-[#2CD5C4] bg-[#E8F4F4]'
+                          : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
+                      }`}
+                      onClick={() => {
+                        setSelectedProgram(program.id);
+                        setSelectedAddons([]); // Reset add-ons when program changes
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-[#141414] font-medium">{program.name}</h3>
+                          <p className="text-[#667085] text-sm mt-1">{program.description}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="text-[#141414] font-medium">{program.price}</span>
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                            selectedProgram === program.id
+                              ? 'border-[#2CD5C4] bg-[#2CD5C4]'
+                              : 'border-[#E8E8E8]'
+                          }`}>
+                            {selectedProgram === program.id && (
+                              <Check className="h-4 w-4 text-white" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add-ons Selection */}
+              <div>
+                <h2 className="text-[#141414] text-lg mb-4">Available Add-ons</h2>
+                {!selectedProgram ? (
+                  <Alert variant="info">
+                    <AlertDescription>
+                      Please select a program to view a list of available add-ons.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <div className="space-y-4">
+                    {/* No Add-ons Option */}
+                    <div
+                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                        selectedAddons.length === 0
+                          ? 'border-[#2CD5C4] bg-[#E8F4F4]'
+                          : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
+                      }`}
+                      onClick={() => setSelectedAddons([])}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-[#141414] font-medium">No Add-ons</h3>
+                          <p className="text-[#667085] text-sm mt-1">Continue without any additional services</p>
+                        </div>
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          selectedAddons.length === 0
+                            ? 'border-[#2CD5C4] bg-[#2CD5C4]'
+                            : 'border-[#E8E8E8]'
+                        }`}>
+                          {selectedAddons.length === 0 && (
+                            <Check className="h-4 w-4 text-white" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Available Add-ons */}
+                    <div className="grid grid-cols-1 gap-4">
+                      {addonsByProgram[selectedProgram as keyof typeof addonsByProgram].map((addon) => (
+                        <div
+                          key={addon.id}
+                          className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                            selectedAddons.includes(addon.id)
+                              ? 'border-[#2CD5C4] bg-[#E8F4F4]'
+                              : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
+                          }`}
+                          onClick={() => {
+                            setSelectedAddons(prev =>
+                              prev.includes(addon.id)
+                                ? prev.filter(id => id !== addon.id)
+                                : [...prev, addon.id]
+                            )
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h3 className="text-[#141414] font-medium">{addon.name}</h3>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="text-[#141414] font-medium">{addon.price}</span>
+                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                selectedAddons.includes(addon.id)
+                                  ? 'border-[#2CD5C4] bg-[#2CD5C4]'
+                                  : 'border-[#E8E8E8]'
+                              }`}>
+                                {selectedAddons.includes(addon.id) && (
+                                  <Check className="h-4 w-4 text-white" />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </Card>
         </div>
       </main>
