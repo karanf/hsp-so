@@ -110,8 +110,9 @@ export default function Form() {
   const [isFormComplete, setIsFormComplete] = useState(false);
 
   // Program and Add-ons states
-  const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedProgram, setSelectedProgram] = useState("academic-year");
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [hasExplicitlySelectedAddons, setHasExplicitlySelectedAddons] = useState(false);
 
   // Program options
   const programOptions = [
@@ -120,18 +121,6 @@ export default function Form() {
       name: "Academic Year Program",
       description: "Full academic year in a chosen country with a host family",
       price: "$15,000"
-    },
-    {
-      id: "semester",
-      name: "Semester Program",
-      description: "One semester abroad with cultural immersion",
-      price: "$8,500"
-    },
-    {
-      id: "summer",
-      name: "Summer Program",
-      description: "Intensive summer learning experience",
-      price: "$5,000"
     }
   ];
 
@@ -318,9 +307,12 @@ export default function Form() {
     const additionalTotalFields = totalFieldsCount;
     setAdditionalProgress(Math.round((additionalCompletedFields / additionalTotalFields) * 100));
 
-    // Overall form progress - Combines all sections
-    const totalFields = studentTotalFields + parent1TotalFields + parent2TotalFields + additionalTotalFields;
-    const completedFields = studentCompletedFields + parent1CompletedFields + parent2CompletedFields + additionalCompletedFields;
+    // Program & Add-ons progress
+    const programAddonsProgress = selectedProgram && hasExplicitlySelectedAddons ? 100 : 0;
+
+    // Overall form progress - update to include program & add-ons
+    const totalFields = studentTotalFields + parent1TotalFields + parent2TotalFields + additionalTotalFields + 1; // +1 for program & add-ons
+    const completedFields = studentCompletedFields + parent1CompletedFields + parent2CompletedFields + additionalCompletedFields + (programAddonsProgress === 100 ? 1 : 0);
     const progress = Math.round((completedFields / totalFields) * 100);
     setFormProgress(progress);
     setIsFormComplete(progress === 100);
@@ -342,7 +334,9 @@ export default function Form() {
     // Guardian and health info dependencies
     isSoleGuardian, guardianshipDocument,
     hasAllergies, hasTreatment, hasDietary,
-    allergiesDetails, treatmentDetails, dietaryDetails
+    allergiesDetails, treatmentDetails, dietaryDetails,
+    selectedProgram,
+    hasExplicitlySelectedAddons
   ]);
 
   /**
@@ -629,7 +623,7 @@ export default function Form() {
             >
               <span>Program & Add-ons</span>
               <div className="absolute left-6 top-1/2 -translate-y-1/2">
-                {selectedProgram ? (
+                {selectedProgram && hasExplicitlySelectedAddons ? (
                   <CircleCheckBig className="h-5 w-5 text-[#2CD5C4]" />
                 ) : (
                   <div className="relative h-5 w-5">
@@ -669,6 +663,7 @@ export default function Form() {
                     {activeSection === 'parent1-details' && "Parent/Guardian 1 Details"}
                     {activeSection === 'parent2-details' && "Parent/Guardian 2 Details"}
                     {activeSection === 'additional-info' && "Additional Information"}
+                    {activeSection === 'program-addons' && "Program & Add-ons"}
                   </span>
                   
                       </div>
@@ -1494,121 +1489,99 @@ export default function Form() {
             <div className="space-y-8">
               {/* Program Selection */}
               <div>
-                <h2 className="text-[#141414] text-lg mb-4">Select Your Program</h2>
+                <h2 className="text-[#141414] text-lg mb-4">Selected Program</h2>
                 <div className="grid grid-cols-1 gap-4">
-                  {programOptions.map((program) => (
-                    <div
-                      key={program.id}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                        selectedProgram === program.id
-                          ? 'border-[#2CD5C4] bg-[#E8F4F4]'
-                          : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
-                      }`}
-                      onClick={() => {
-                        setSelectedProgram(program.id);
-                        setSelectedAddons([]); // Reset add-ons when program changes
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-[#141414] font-medium">{program.name}</h3>
-                          <p className="text-[#667085] text-sm mt-1">{program.description}</p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="text-[#141414] font-medium">{program.price}</span>
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            selectedProgram === program.id
-                              ? 'border-[#2CD5C4] bg-[#2CD5C4]'
-                              : 'border-[#E8E8E8]'
-                          }`}>
-                            {selectedProgram === program.id && (
-                              <Check className="h-4 w-4 text-white" />
-                            )}
-                          </div>
+                  <div className="p-4 border rounded-lg border-[#2CD5C4] bg-[#E8F4F4]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-[#141414] font-medium">Academic Year Program</h3>
+                        <p className="text-[#667085] text-sm mt-1">Full academic year in a chosen country with a host family</p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="text-[#141414] font-medium">$15,000</span>
+                        <div className="w-6 h-6 rounded-full border-2 border-[#2CD5C4] bg-[#2CD5C4] flex items-center justify-center">
+                          <Check className="h-4 w-4 text-white" />
                         </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
 
               {/* Add-ons Selection */}
               <div>
-                <h2 className="text-[#141414] text-lg mb-4">Available Add-ons</h2>
-                {!selectedProgram ? (
-                  <Alert variant="info">
-                    <AlertDescription>
-                      Please select a program to view a list of available add-ons.
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="space-y-4">
-                    {/* No Add-ons Option */}
-                    <div
-                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                        selectedAddons.length === 0
-                          ? 'border-[#2CD5C4] bg-[#E8F4F4]'
-                          : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
-                      }`}
-                      onClick={() => setSelectedAddons([])}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-[#141414] font-medium">No Add-ons</h3>
-                          <p className="text-[#667085] text-sm mt-1">Continue without any additional services</p>
-                        </div>
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                          selectedAddons.length === 0
-                            ? 'border-[#2CD5C4] bg-[#2CD5C4]'
-                            : 'border-[#E8E8E8]'
-                        }`}>
-                          {selectedAddons.length === 0 && (
-                            <Check className="h-4 w-4 text-white" />
-                          )}
-                        </div>
+                <h2 className="text-[#141414] text-lg mb-2">Available Add-ons</h2>
+                <p className="text-[#667085] text-sm mb-4">You can select multiple add-ons to enhance your program experience</p>
+                <div className="space-y-4">
+                  {/* No Add-ons Option */}
+                  <div
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      selectedAddons.length === 0 && hasExplicitlySelectedAddons
+                        ? 'border-[#2CD5C4] bg-[#E8F4F4]'
+                        : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
+                    }`}
+                    onClick={() => {
+                      setSelectedAddons([]);
+                      setHasExplicitlySelectedAddons(true);
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-[#141414] font-medium">No Add-ons</h3>
+                        <p className="text-[#667085] text-sm mt-1">Continue without any additional services</p>
+                      </div>
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        selectedAddons.length === 0 && hasExplicitlySelectedAddons
+                          ? 'border-[#2CD5C4] bg-[#2CD5C4]'
+                          : 'border-[#E8E8E8]'
+                      }`}>
+                        {selectedAddons.length === 0 && hasExplicitlySelectedAddons && (
+                          <Check className="h-4 w-4 text-white" />
+                        )}
                       </div>
                     </div>
+                  </div>
 
-                    {/* Available Add-ons */}
-                    <div className="grid grid-cols-1 gap-4">
-                      {addonsByProgram[selectedProgram as keyof typeof addonsByProgram].map((addon) => (
-                        <div
-                          key={addon.id}
-                          className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                            selectedAddons.includes(addon.id)
-                              ? 'border-[#2CD5C4] bg-[#E8F4F4]'
-                              : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
-                          }`}
-                          onClick={() => {
-                            setSelectedAddons(prev =>
-                              prev.includes(addon.id)
-                                ? prev.filter(id => id !== addon.id)
-                                : [...prev, addon.id]
-                            )
-                          }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h3 className="text-[#141414] font-medium">{addon.name}</h3>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <span className="text-[#141414] font-medium">{addon.price}</span>
-                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                                selectedAddons.includes(addon.id)
-                                  ? 'border-[#2CD5C4] bg-[#2CD5C4]'
-                                  : 'border-[#E8E8E8]'
-                              }`}>
-                                {selectedAddons.includes(addon.id) && (
-                                  <Check className="h-4 w-4 text-white" />
-                                )}
-                              </div>
+                  {/* Available Add-ons */}
+                  <div className="grid grid-cols-1 gap-4">
+                    {addonsByProgram[selectedProgram as keyof typeof addonsByProgram].map((addon) => (
+                      <div
+                        key={addon.id}
+                        className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                          selectedAddons.includes(addon.id)
+                            ? 'border-[#2CD5C4] bg-[#E8F4F4]'
+                            : 'border-[#E8E8E8] hover:border-[#2CD5C4]'
+                        }`}
+                        onClick={() => {
+                          setSelectedAddons(prev =>
+                            prev.includes(addon.id)
+                              ? prev.filter(id => id !== addon.id)
+                              : [...prev, addon.id]
+                          );
+                          setHasExplicitlySelectedAddons(true);
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-[#141414] font-medium">{addon.name}</h3>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className="text-[#141414] font-medium">{addon.price}</span>
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                              selectedAddons.includes(addon.id)
+                                ? 'border-[#2CD5C4] bg-[#2CD5C4]'
+                                : 'border-[#E8E8E8]'
+                            }`}>
+                              {selectedAddons.includes(addon.id) && (
+                                <Check className="h-4 w-4 text-white" />
+                              )}
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </Card>
